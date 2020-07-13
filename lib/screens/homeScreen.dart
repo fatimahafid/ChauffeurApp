@@ -8,7 +8,9 @@ class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
-
+const jaune = const Color(0xfffed136);
+const grisFon = const Color(0xff212529);
+const jauneFon = const Color(0xffe6b301);
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
@@ -29,7 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                
+
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
@@ -50,21 +52,21 @@ class _HomeScreenState extends State<HomeScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     FadeAnimation(2.8,CustomButton(
-                      label: "Sign up",
+                      label: "S'inscrire",
                       background: Colors.transparent,
                       fontColor: Colors.white,
-                      borderColor: Colors.white,
+                      borderColor: jaune,
                     )),
                     SizedBox(height: 20),
                     FadeAnimation(3.2,CustomButtonAnimation(
-                      label: "Sign In",
-                      backbround: Colors.white,
-                      borderColor: Colors.white,
-                      fontColor: Color(0xFFF001117),
+                      label: "Se Connecter",
+                      backbround: jauneFon,
+                      borderColor: jauneFon,
+                      fontColor: Colors.white,
                       child: LoginScreen(),
                     )),
                     SizedBox(height: 30),
-                    FadeAnimation(3.4,Text("Forgot password", style: TextStyle(
+                    FadeAnimation(3.4,Text("Mot de passe oublié ?", style: TextStyle(
                       color: Colors.white,
                       fontSize: 17,
                       decoration: TextDecoration.underline
