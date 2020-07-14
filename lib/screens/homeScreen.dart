@@ -4,6 +4,11 @@ import 'package:login_dash_animation/components/customButton.dart';
 import 'package:login_dash_animation/components/customButtonAnimation.dart';
 import 'package:login_dash_animation/screens/loginScreen.dart';
 
+
+
+import 'loginScreen.dart';
+
+
 class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -18,7 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Stack(
         fit: StackFit.expand,
         children: <Widget>[
-          Image.asset("assets/images/home.jpg", fit: BoxFit.cover),
+          Image.asset("assets/images/bg2.jpg", fit: BoxFit.cover),
           Container(
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,
@@ -34,17 +39,28 @@ class _HomeScreenState extends State<HomeScreen> {
 
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+
                   children: <Widget>[
-                  FadeAnimation(2.4,Text("Best waves for", style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 22,
-                  letterSpacing: 2
-                ))),
-                FadeAnimation(2.6,Text(".surfing", style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 50,
-                  fontWeight: FontWeight.bold
-                ))),
+                  Container(
+                    margin: EdgeInsets.only(top: 100, left: 40),
+
+                    child: FadeAnimation(2.4,Text("Vous etes un Chauffeur  ?", style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 22,
+                    letterSpacing: 2,
+
+
+
+                    ))),
+                  ),
+                Container(
+                  margin: EdgeInsets.only( left: 60),
+                  child: FadeAnimation(2.6,Text("Bienvenue", style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 50,
+                    fontWeight: FontWeight.bold
+                  ))),
+                ),
                   ],
                 ),
 

@@ -15,12 +15,18 @@ class CustomTextField extends StatelessWidget {
         obscureText: isPassword,
         decoration: InputDecoration(
           focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(14),
+
             borderSide: BorderSide(color: Colors.grey, width: 1.0)
           ),
-           enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.grey, width: 1.0)
+
+           border: OutlineInputBorder(
+               borderRadius: BorderRadius.circular(14),
+
+               borderSide: BorderSide(color: Colors.grey, width: 1.0)
           ),
           labelText: label,
+
           labelStyle: TextStyle(color: Color(0xFFF234253),fontWeight: FontWeight.bold),
           suffixIcon: icon
         ),

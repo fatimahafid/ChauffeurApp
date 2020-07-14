@@ -78,19 +78,36 @@ with TickerProviderStateMixin {
           width: double.infinity,
           decoration: BoxDecoration(
             color: widget.background,
-            borderRadius: BorderRadius.circular(14),
+            borderRadius: BorderRadius.circular(25),
           ),
           child: !_isLogin ? Row(
             crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
             children: <Widget>[
-              Text(widget.label, style: TextStyle(
-                color: widget.fontColor,
-                fontSize: 20,
-                fontWeight: FontWeight.bold
-              )),
-              SizedBox(width: 10),
-              Icon(Icons.arrow_forward, color: widget.fontColor,size: 32)
+              Container(
+                padding: EdgeInsets.only(left:80,right: 20),
+                child: Text(widget.label, style: TextStyle(
+                  color: widget.fontColor,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+
+
+                )),
+              ),
+              SizedBox(width: 0),
+              Container(
+                //width: 50.0,
+                //height: 50.0,
+                margin: EdgeInsets.only(right: 20),
+                padding: const EdgeInsets.all(2.0),//I used some padding without fixed width and height
+                decoration: new BoxDecoration(
+                  shape: BoxShape.circle,// You can use like this way or like the below line
+                  //borderRadius: new BorderRadius.circular(30.0),
+                  color: Colors.white,
+                ),
+                  child:Icon(Icons.arrow_forward, color: Color(0xffe6b301),size: 28)
+              ),//............
             ],
           ) : Stack(
             children: <Widget>[
@@ -104,13 +121,15 @@ with TickerProviderStateMixin {
                     builder: (context,build) => Transform.scale(
                     scale: _scaleAnimation.value,
                     child: Container(
-                      height: 50,
-                      width: 50,
-                      decoration: BoxDecoration(
-                        color: widget.borderColor,
-                        shape: BoxShape.circle,
+                      height: 45,
+                      width: 45,
+                      decoration: new BoxDecoration(
+                        shape: BoxShape.circle,// You can use like this way or like the below line
+                        //borderRadius: new BorderRadius.circular(30.0),
+                        color: Colors.white,
                       ),
-                      child: !_isIconHide ? Icon(Icons.arrow_forward, color: widget.fontColor,size: 32) : Container(),
+                      child: !_isIconHide ?Icon(Icons.arrow_forward, color: Color(0xffe6b301),size: 28)
+                        : Container(),
                     )),
                   ),
                 ),
