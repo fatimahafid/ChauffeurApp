@@ -3,10 +3,15 @@ import 'package:login_dash_animation/animations/fadeAnimation.dart';
 import 'package:login_dash_animation/components/customButton.dart';
 import 'package:login_dash_animation/components/customButtonAnimation.dart';
 import 'package:login_dash_animation/screens/loginScreen.dart';
+import 'package:login_dash_animation/screens/inscriptionScreen.dart';
+
+
 
 
 
 import 'loginScreen.dart';
+import 'Menu.dart';
+
 
 
 class HomeScreen extends StatefulWidget {
@@ -67,11 +72,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    FadeAnimation(2.8,CustomButton(
+                    FadeAnimation(3.2,CustomButtonAnimation(
                       label: "S'inscrire",
-                      background: Colors.transparent,
+                      backbround: Colors.transparent,
                       fontColor: Colors.white,
+                      child: InscriptionScreen(),
+
                       borderColor: jaune,
+
                     )),
                     SizedBox(height: 20),
                     FadeAnimation(3.2,CustomButtonAnimation(
