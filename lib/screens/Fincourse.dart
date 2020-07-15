@@ -62,7 +62,7 @@ class _FincourseState extends State<Fincourse> {
                     child: ColorLoader3(
                     //  colors: [Colors.white,Colors.white,Colors.white,Colors.white,Colors.white],duration: Duration(microseconds: 50000),
                 radius: 50,
-                      dotRadius:5,
+                      dotRadius:6,
 
                     ),
 
