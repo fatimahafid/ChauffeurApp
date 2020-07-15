@@ -1,4 +1,3 @@
-# login_dash_animation
 
 A new Flutter project.
 
