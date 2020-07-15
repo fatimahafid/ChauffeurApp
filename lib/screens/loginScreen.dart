@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:login_dash_animation/components/buttonLoginAnimation.dart';
 import 'package:login_dash_animation/components/customTextfield.dart';
 import 'package:login_dash_animation/screens/dashScreen.dart';
+import 'package:login_dash_animation/screens/Menu.dart';
+
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -52,6 +54,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Container(
+
                       margin:EdgeInsets.only(left:20,right:20,top: 0) ,
                       child: Text("Authentifier-vous ",
                           textAlign: TextAlign.center,
@@ -90,9 +93,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       fontColor: Colors.white,
                       background: Color(0xffe6b301),
                       borderColor: Color(0xffe6b301),
-                      child: DashScreen(),
+                      child: Menu(),
                     )
-                  ],
+                            ],
                 ),
               )
             ],
