@@ -8,8 +8,10 @@ import 'package:login_dash_animation/screens/inscriptionScreen.dart';
 
 
 
+
 import 'loginScreen.dart';
-import 'inscriptionScreen.dart';
+import 'Menu.dart';
+
 
 
 class HomeScreen extends StatefulWidget {
@@ -73,9 +75,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     FadeAnimation(3.2,CustomButtonAnimation(
                       label: "S'inscrire",
                       backbround: Colors.transparent,
-                      borderColor: jauneFon,
                       fontColor: Colors.white,
                       child: InscriptionScreen(),
+
+                      borderColor: jaune,
+
                     )),
                     SizedBox(height: 20),
                     FadeAnimation(3.2,CustomButtonAnimation(
