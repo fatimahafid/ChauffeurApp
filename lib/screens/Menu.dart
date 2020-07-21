@@ -4,23 +4,19 @@ import 'package:flutter/services.dart';
 import 'package:login_dash_animation/components/buttonLoginAnimation.dart';
 import 'package:login_dash_animation/components/customTextfield.dart';
 import 'package:login_dash_animation/screens/dashScreen.dart';
+import 'package:login_dash_animation/screens/editProfile.dart';
 import 'package:login_dash_animation/screens/loginScreen.dart';
 import 'package:login_dash_animation/screens/Fincourse.dart';
 import 'package:login_dash_animation/screens/modifierVehicule.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class Menu extends StatefulWidget {
   @override
   _MenuState createState() => _MenuState();
-
 }
 
-
-
 class _MenuState extends State<Menu> {
-
-
   @override
-
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
@@ -71,14 +67,12 @@ class _MenuState extends State<Menu> {
               ],
             ),
           ),
-
           SafeArea(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
                 SizedBox(height: 20),
                 Container(
-
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.only(
@@ -102,10 +96,9 @@ class _MenuState extends State<Menu> {
                     children: <Widget>[
                       Row(
                         children: <Widget>[
-
                           new GestureDetector(
                             onTap: () {
-                             /* AlertDialog(
+                              /* AlertDialog(
                                 title: Text("Êtes-vous sur place ?"),
                                 content: Text("En cliquant sur OUI vous faite partie de la file d'attente."),
                                 actions: [
@@ -120,8 +113,23 @@ class _MenuState extends State<Menu> {
                                 builder: (_) => AlertDialog(),
                                 barrierDismissible: true,
                               );*/
-                              print("Container clicked");
-
+                              return Alert(
+                                context: context,
+                                type: AlertType.success,
+                                title: "Succès",
+                                desc: "Vous êtes ajoutés à la file d'attente.",
+                                buttons: [
+                                  DialogButton(
+                                    child: Text(
+                                      "Ok",
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 20),
+                                    ),
+                                    onPressed: () => Navigator.pop(context),
+                                    width: 120,
+                                  )
+                                ],
+                              ).show();
                             },
                             child: Container(
                               padding: EdgeInsets.all(22),
@@ -146,10 +154,8 @@ class _MenuState extends State<Menu> {
                                   ),
                                 ],
                               ),
-
                               child: Column(
                                 children: <Widget>[
-
                                   Text('Je suis pret',
                                       style: TextStyle(
                                         fontSize: 22,
@@ -295,7 +301,11 @@ class _MenuState extends State<Menu> {
                           ),
                           new GestureDetector(
                             onTap: () {
-                              print("Container clicked");
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => EditProfil()),
+                              );
                             },
                             child: Container(
                               padding: EdgeInsets.all(19),
