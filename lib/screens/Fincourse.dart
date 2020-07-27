@@ -5,6 +5,8 @@ import 'package:login_dash_animation/components/customButton.dart';
 import 'package:login_dash_animation/components/customButtonAnimation.dart';
 import 'package:login_dash_animation/screens/loginScreen.dart';
 import 'package:login_dash_animation/screens/Menu.dart';
+import 'package:login_dash_animation/SizeConfig.dart';
+
 
 
 
@@ -24,6 +26,8 @@ const jauneFon = const Color(0xffe6b301);
 class _FincourseState extends State<Fincourse> {
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
+
     return Scaffold(
       body: Stack(
         fit: StackFit.expand,
@@ -34,8 +38,8 @@ class _FincourseState extends State<Fincourse> {
             color: Color(0xffe6b301).withOpacity(0.7),
           ),
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 30),
-            margin: EdgeInsets.only(top: 80, bottom: 80),
+            padding: EdgeInsets.symmetric(horizontal: SizeConfig.safeBlockHorizontal * 9),
+            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 5, bottom: SizeConfig.safeBlockVertical * 15),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -47,7 +51,7 @@ class _FincourseState extends State<Fincourse> {
                   children: <Widget>[
 
                     Container(
-                      margin: EdgeInsets.only( left: 40,top:100),
+                      margin: EdgeInsets.only( left: SizeConfig.safeBlockHorizontal * 4,top:SizeConfig.safeBlockHorizontal * 20),
                       child: FadeAnimation(2.6,Text("Course en cours", style: TextStyle(
                           color: Colors.white,
                           fontSize: 40,
@@ -55,7 +59,7 @@ class _FincourseState extends State<Fincourse> {
                       ))),
                     ),
                 Container(
-                  margin: EdgeInsets.only( top:50,left:135),
+                  margin: EdgeInsets.only( top:SizeConfig.safeBlockHorizontal * 20,left: SizeConfig.safeBlockHorizontal * 29),
                   width: 100,
                   height: 100,
 
@@ -75,15 +79,15 @@ class _FincourseState extends State<Fincourse> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    SizedBox(height: 20),
                     FadeAnimation(3.2,CustomButtonAnimation(
+
                       label: "Fin de course",
                       backbround: Colors.white,
                       borderColor: Colors.white,
                       fontColor:jauneFon ,
                       child: Menu(),
                     )),
-                    SizedBox(height: 30),
+                    SizedBox(height: SizeConfig.safeBlockHorizontal * 2),
                   ],
                 )
               ],

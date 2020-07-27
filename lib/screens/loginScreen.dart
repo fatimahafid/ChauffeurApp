@@ -3,6 +3,8 @@ import 'package:login_dash_animation/components/buttonLoginAnimation.dart';
 import 'package:login_dash_animation/components/customTextfield.dart';
 import 'package:login_dash_animation/screens/dashScreen.dart';
 import 'package:login_dash_animation/screens/Menu.dart';
+import 'package:login_dash_animation/SizeConfig.dart';
+
 
 
 class LoginScreen extends StatefulWidget {
@@ -31,31 +33,32 @@ class _LoginScreenState extends State<LoginScreen> {
 ],
           ),
         SafeArea(
+          child: SingleChildScrollView(
+
           child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
-              SizedBox(height: 20),
+              SizedBox(height: SizeConfig.safeBlockVertical * 5),
 
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-                margin:EdgeInsets.only(left:20,right:20,bottom: 50) ,
+                padding: EdgeInsets.symmetric(horizontal: SizeConfig.safeBlockHorizontal * 5, vertical: SizeConfig.safeBlockVertical *  5),
+                margin:EdgeInsets.only(left:SizeConfig.safeBlockHorizontal * 6,right:SizeConfig.safeBlockHorizontal * 6,bottom: SizeConfig.safeBlockVertical * 8,top: SizeConfig.safeBlockVertical * 10) ,
                 height: MediaQuery.of(context).size.height * 0.70,
                 width: MediaQuery.of(context).size.width,
                 decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(25),
-                        topRight: Radius.circular(25),
-                      bottomLeft: Radius.circular(25),
-                      bottomRight: Radius.circular(25),
+                        topLeft: Radius.circular(SizeConfig.safeBlockHorizontal * 7),
+                        topRight: Radius.circular(SizeConfig.safeBlockHorizontal * 7),
+                      bottomLeft: Radius.circular(SizeConfig.safeBlockHorizontal * 7),
+                      bottomRight: Radius.circular(SizeConfig.safeBlockHorizontal * 7),
                     )),
-                child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Container(
 
-                      margin:EdgeInsets.only(left:20,right:20,top: 0) ,
+                      margin:EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5,right:SizeConfig.safeBlockHorizontal * 5,top: SizeConfig.safeBlockVertical * 0) ,
                       child: Text("Authentifier-vous ",
                           textAlign: TextAlign.center,
 
@@ -67,27 +70,34 @@ class _LoginScreenState extends State<LoginScreen> {
 
                               )),
                     ),
-                    SizedBox(height: 40),
-                    CustomTextField(
-                      label: "Email",
-                      icon: Icon(
-                        Icons.mail,
-                        size: 27,
-                        color: Color(0xFFF032f41),
+                    SizedBox(height: SizeConfig.safeBlockVertical * 5),
+                    Container(
+                      height: SizeConfig.safeBlockVertical * 10,
+                      child: CustomTextField(
+                        label: "Email",
+                        icon: Icon(
+                          Icons.mail,
+                          size: 27,
+                          color: Color(0xFFF032f41),
+                        ),
                       ),
                     ),
 
-                    SizedBox(height: 20),
-                    CustomTextField(
-                      label: "Password",
-                      isPassword: true,
-                      icon: Icon(
-                        Icons.https,
-                        size: 27,
-                        color: Color(0xFFF032f41),
+                    SizedBox(height: SizeConfig.safeBlockVertical * 4),
+                    Container(
+                      height: SizeConfig.safeBlockVertical * 10,
+
+                      child: CustomTextField(
+                        label: "Password",
+                        isPassword: true,
+                        icon: Icon(
+                          Icons.https,
+                          size: 27,
+                          color: Color(0xFFF032f41),
+                        ),
                       ),
                     ),
-                    SizedBox(height: 40),
+                    SizedBox(height: SizeConfig.safeBlockVertical * 5),
                     ButtonLoginAnimation(
                       label: "Se connecter",
                       fontColor: Colors.white,
@@ -97,9 +107,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     )
                             ],
                 ),
-                ),
+
               )
             ],
+          ),
           ),
         ),
     ],

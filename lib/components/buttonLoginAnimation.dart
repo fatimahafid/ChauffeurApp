@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:login_dash_animation/SizeConfig.dart';
 
 class ButtonLoginAnimation extends StatefulWidget {
 
@@ -74,11 +75,11 @@ with TickerProviderStateMixin {
           _positionController.forward();
         },
         child: Container(
-          height: 63,
+          height: SizeConfig.safeBlockVertical * 10,
           width: double.infinity,
           decoration: BoxDecoration(
             color: widget.background,
-            borderRadius: BorderRadius.circular(25),
+            borderRadius: BorderRadius.circular(SizeConfig.safeBlockVertical * 7),
           ),
           child: !_isLogin ? Row(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -86,7 +87,9 @@ with TickerProviderStateMixin {
 
             children: <Widget>[
               Container(
-                padding: EdgeInsets.only(left:80,right: 20),
+                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 10),
+
+                padding: EdgeInsets.only(left:SizeConfig.safeBlockHorizontal * 3,right: SizeConfig.safeBlockHorizontal * 7),
                 child: Text(widget.label, style: TextStyle(
                   color: widget.fontColor,
                   fontSize: 20,
@@ -99,7 +102,7 @@ with TickerProviderStateMixin {
               Container(
                 //width: 50.0,
                 //height: 50.0,
-                margin: EdgeInsets.only(right: 20),
+                margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 5),
                 padding: const EdgeInsets.all(2.0),//I used some padding without fixed width and height
                 decoration: new BoxDecoration(
                   shape: BoxShape.circle,// You can use like this way or like the below line
@@ -115,20 +118,20 @@ with TickerProviderStateMixin {
                 animation: _positionController,
                 builder: (context, child) => Positioned(
                   left: _positionAnimation.value,
-                  top: 5,
+                  top: SizeConfig.safeBlockVertical * 0.2,
                   child: AnimatedBuilder(
                     animation: _scaleController,
                     builder: (context,build) => Transform.scale(
                     scale: _scaleAnimation.value,
                     child: Container(
-                      height: 45,
-                      width: 45,
+                      height: SizeConfig.safeBlockVertical * 13,
+                      width: SizeConfig.safeBlockHorizontal * 13,
                       decoration: new BoxDecoration(
                         shape: BoxShape.circle,// You can use like this way or like the below line
                         //borderRadius: new BorderRadius.circular(30.0),
                         color: Colors.white,
                       ),
-                      child: !_isIconHide ?Icon(Icons.arrow_forward, color: Color(0xffe6b301),size: 28)
+                      child: !_isIconHide ?Icon(Icons.arrow_forward, color: Color(0xffe6b301),size: SizeConfig.safeBlockHorizontal * 7)
                         : Container(),
                     )),
                   ),
