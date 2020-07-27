@@ -51,11 +51,11 @@ class _ModifierVehiculeState extends State<ModifierVehicule> {
                     children: <Widget>[
                       Container(
                         margin: EdgeInsets.only(left: 20, right: 20, top: 0),
-                        child: Text("Ajouter votre véhicule",
+                        child: Text("Modifier votre véhicule",
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               color: Color(0xFFF032f41),
-                              fontSize: 30,
+                              fontSize: 27,
                               fontFamily: "Pacificio",
                             )),
                       ),
@@ -145,7 +145,7 @@ class _ModifierVehiculeState extends State<ModifierVehicule> {
                       ),
                       SizedBox(height: 20),
                       ButtonLoginAnimation(
-                        label: "Ajouter",
+                        label: "Modifier",
                         fontColor: Colors.white,
                         background: Color(0xffe6b301),
                         borderColor: Color(0xffe6b301),

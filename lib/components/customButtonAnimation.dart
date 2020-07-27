@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:login_dash_animation/SizeConfig.dart';
+
 
 class CustomButtonAnimation extends StatefulWidget {
   final String label;
@@ -72,7 +74,7 @@ with TickerProviderStateMixin {
         builder: (context, child) => Transform.scale(
           scale: _scaleAnimation.value,
         child: Container(
-          height: 63,
+          height:SizeConfig.safeBlockHorizontal * 15,
           alignment: Alignment.center,
           decoration: BoxDecoration(
             color: widget.backbround,

@@ -4,6 +4,8 @@ import 'package:login_dash_animation/components/customButton.dart';
 import 'package:login_dash_animation/components/customButtonAnimation.dart';
 import 'package:login_dash_animation/screens/loginScreen.dart';
 import 'package:login_dash_animation/screens/inscriptionScreen.dart';
+import 'package:login_dash_animation/SizeConfig.dart';
+
 
 
 
@@ -24,6 +26,7 @@ const jauneFon = const Color(0xffe6b301);
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     return Scaffold(
       body: Stack(
         fit: StackFit.expand,
@@ -35,8 +38,8 @@ class _HomeScreenState extends State<HomeScreen> {
             color: Color(0xFFF001117).withOpacity(0.7),
           ),
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 30),
-            margin: EdgeInsets.only(top: 80, bottom: 80),
+            padding: EdgeInsets.symmetric(horizontal: SizeConfig.safeBlockHorizontal * 7),
+            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 10, bottom: SizeConfig.safeBlockVertical * 10 ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -47,7 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                   children: <Widget>[
                   Container(
-                    margin: EdgeInsets.only(top: 100, left: 40),
+                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 10, left: SizeConfig.safeBlockHorizontal * 0),
 
                     child: FadeAnimation(2.4,Text("Vous etes un Chauffeur  ?", style: TextStyle(
                     color: Colors.white,
@@ -59,7 +62,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ))),
                   ),
                 Container(
-                  margin: EdgeInsets.only( left: 60),
+                  margin: EdgeInsets.only( left: SizeConfig.safeBlockHorizontal * 5,top: SizeConfig.safeBlockVertical * 3),
                   child: FadeAnimation(2.6,Text("Bienvenue", style: TextStyle(
                     color: Colors.white,
                     fontSize: 50,
@@ -81,7 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       borderColor: jaune,
 
                     )),
-                    SizedBox(height: 20),
+                    SizedBox(height: SizeConfig.safeBlockHorizontal * 5),
                     FadeAnimation(3.2,CustomButtonAnimation(
                       label: "Se Connecter",
                       backbround: jauneFon,
@@ -89,7 +92,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       fontColor: Colors.white,
                       child: LoginScreen(),
                     )),
-                    SizedBox(height: 30),
+                    SizedBox(height: SizeConfig.safeBlockHorizontal * 5),
                     FadeAnimation(3.4,Text("Mot de passe oublié ?", style: TextStyle(
                       color: Colors.white,
                       fontSize: 17,

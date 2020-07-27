@@ -49,7 +49,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       bottomLeft: Radius.circular(25),
                       bottomRight: Radius.circular(25),
                     )),
-
+                child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
@@ -96,6 +96,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: Menu(),
                     )
                             ],
+                ),
                 ),
               )
             ],

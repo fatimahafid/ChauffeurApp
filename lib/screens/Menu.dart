@@ -91,6 +91,8 @@ class _MenuState extends State<Menu> {
                   padding: EdgeInsets.only(right: 10, left: 35, top: 50),
                   height: MediaQuery.of(context).size.height * 0.80,
                   width: MediaQuery.of(context).size.width,
+                  child: SingleChildScrollView(
+
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
@@ -360,6 +362,7 @@ class _MenuState extends State<Menu> {
                       ),
                       SizedBox(height: 40),
                     ],
+                  ),
                   ),
                 ),
               ],
