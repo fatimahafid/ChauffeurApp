@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:login_dash_animation/components/buttonLoginAnimation.dart';
 import 'package:login_dash_animation/components/customTextfield.dart';
-import 'package:login_dash_animation/screens/dashScreen.dart';
 import 'package:login_dash_animation/screens/ajouterVehicule.dart';
 import 'package:login_dash_animation/SizeConfig.dart';
 
