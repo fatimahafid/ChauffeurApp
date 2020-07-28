@@ -5,12 +5,6 @@ import 'package:login_dash_animation/components/customButtonAnimation.dart';
 import 'package:login_dash_animation/screens/loginScreen.dart';
 import 'package:login_dash_animation/screens/inscriptionScreen.dart';
 import 'package:login_dash_animation/SizeConfig.dart';
-
-
-
-
-
-
 import 'loginScreen.dart';
 import 'Menu.dart';
 

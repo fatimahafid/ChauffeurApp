@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:login_dash_animation/screens/homeScreen.dart';
+import 'package:login_dash_animation/screens/test.dart';
 
 void main() => runApp(MyApp());
 
@@ -13,7 +14,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: HomeScreen(),
+      home: Example(),
     );
   }
 }
