@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:login_dash_animation/components/buttonLoginAnimation.dart';
 import 'package:login_dash_animation/components/customTextfield.dart';
-import 'package:login_dash_animation/screens/dashScreen.dart';
+import 'package:login_dash_animation/models/mysql.dart';
 import 'package:login_dash_animation/screens/Menu.dart';
 import 'package:login_dash_animation/SizeConfig.dart';
+import 'package:login_dash_animation/models/mysql.dart';
+
 
 
 
@@ -13,6 +15,32 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  var db = new Mysql();
+  var login = '';
+
+   _getUserById() {
+
+    db.getConnection().then((conn) {
+      String sql = 'select login from test.user where id = 1;';
+
+      conn.query(sql).then((results) {
+        for (var row in results) {
+          setState(() {
+            login = row[0];
+          });
+          Text("resultat du requete" + login);
+        }
+      });
+      //conn.close();
+
+
+    });
+
+
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -98,13 +126,21 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                     SizedBox(height: SizeConfig.safeBlockVertical * 5),
-                    ButtonLoginAnimation(
-                      label: "Se connecter",
-                      fontColor: Colors.white,
-                      background: Color(0xffe6b301),
-                      borderColor: Color(0xffe6b301),
-                      child: Menu(),
-                    )
+
+                     //ButtonLoginAnimation(
+
+                     //   onTap: _getUserById,
+                       // label: "Se connecter",
+                    //    fontColor: Colors.white,
+                    //    background: Color(0xffe6b301),
+                    //    borderColor: Color(0xffe6b301),
+                     // ),
+            new RaisedButton(
+
+              onPressed: _getUserById(), // invokes function
+              child: new Row(children: <Widget>[new Text("Press meh")]),
+            ),
+
                             ],
                 ),
 

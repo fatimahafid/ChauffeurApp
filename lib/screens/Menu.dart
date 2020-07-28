@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:login_dash_animation/components/buttonLoginAnimation.dart';
 import 'package:login_dash_animation/components/customTextfield.dart';
-import 'package:login_dash_animation/screens/dashScreen.dart';
 import 'package:login_dash_animation/screens/editProfile.dart';
 import 'package:login_dash_animation/screens/loginScreen.dart';
 import 'package:login_dash_animation/screens/Fincourse.dart';
