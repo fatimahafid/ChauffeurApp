@@ -3,7 +3,7 @@ import 'package:login_dash_animation/animations/fadeAnimation.dart';
 import 'package:login_dash_animation/components/customButton.dart';
 import 'package:login_dash_animation/components/customButtonAnimation.dart';
 import 'package:login_dash_animation/screens/loginScreen.dart';
-//import 'package:login_dash_animation/screens/inscriptionScreen.dart';
+import 'package:login_dash_animation/screens/inscriptionScreen.dart';
 import 'package:login_dash_animation/SizeConfig.dart';
 
 
@@ -79,7 +79,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       label: "S'inscrire",
                       backbround: Colors.transparent,
                       fontColor: Colors.white,
-                     // child: InscriptionScreen(),
+                      child: InscriptionScreen(),
 
                       borderColor: jaune,
 

@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:login_dash_animation/components/buttonLoginAnimation.dart';
 import 'package:login_dash_animation/components/customTextfield.dart';
-import 'package:login_dash_animation/screens/Menu.dart';
 import 'package:login_dash_animation/screens/dashScreen.dart';
 import 'package:login_dash_animation/screens/ajouterVehicule.dart';
 import 'package:login_dash_animation/SizeConfig.dart';
 
-class EditProfil extends StatefulWidget {
+
+class InscriptionScreen extends StatefulWidget {
   @override
-  _EditProfilState createState() => _EditProfilState();
+  _InscriptionScreenState createState() => _InscriptionScreenState();
 }
 
-class _EditProfilState extends State<EditProfil> {
+class _InscriptionScreenState extends State<InscriptionScreen> {
   int group = 1;
   @override
   Widget build(BuildContext context) {
@@ -25,8 +25,12 @@ class _EditProfilState extends State<EditProfil> {
             height: MediaQuery.of(context).size.height,
             color: Color(0xFFF001117).withOpacity(0.8),
           ),
+          Column(
+            children: <Widget>[],
+          ),
           SafeArea(
             child: SingleChildScrollView(
+
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
@@ -51,7 +55,7 @@ class _EditProfilState extends State<EditProfil> {
                       children: <Widget>[
                         Container(
                           margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockHorizontal * 0),
-                          child: Text("Modifier Profil",
+                          child: Text("Inscription",
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 color: Color(0xFFF032f41),
@@ -146,7 +150,7 @@ class _EditProfilState extends State<EditProfil> {
                         Container(
                             height: SizeConfig.safeBlockHorizontal * 13,
                             child:ButtonLoginAnimation(
-                              label: "Modifier",
+                              label: "S'inscrire",
                               fontColor: Colors.white,
                               background: Color(0xffe6b301),
                               borderColor: Color(0xffe6b301),
@@ -155,13 +159,15 @@ class _EditProfilState extends State<EditProfil> {
                         ),
                       ],
                     ),
+
                   )
                 ],
               ),
-          ),
+            ),
           ),
         ],
       ),
     );
+
   }
 }
