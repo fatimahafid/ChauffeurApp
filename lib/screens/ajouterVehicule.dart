@@ -5,6 +5,17 @@ import 'package:login_dash_animation/screens/Menu.dart';
 import 'package:login_dash_animation/SizeConfig.dart';
 import 'package:mysql1/mysql1.dart' hide Row;
 import 'package:flutter_session/flutter_session.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart';
+import 'dart:convert';
+import 'dart:io';
+import 'package:async/async.dart';
+
+import 'package:http/http.dart' as http;
+
+import 'package:path_provider/path_provider.dart';
+import 'package:image/image.dart' as Img;
+import 'dart:math' as Math;
 
 
 
@@ -14,26 +25,162 @@ class AjouterVehicule extends StatefulWidget {
 }
 
 class _AjouterVehiculeState extends State<AjouterVehicule> {
-  String dropdownValue = 'Catégorie';
-  String dropdownValue1 = 'Marque';
+  File _image;
+
   final immatr = TextEditingController();
   final agrem = TextEditingController();
   final numtaxi = TextEditingController();
 
+  List<String> marques=getMarques() ;
+  List<String> categories=getGategories() ;
 
-  dynamic userId;
+  var dropdownvalue;
+  var dropdownvalue1;
+  int userId;
   String userName;
+  String ctitle="testphoto";
+
    getUser() async
-  { userId = await FlutterSession().get("id");
-  userName= await FlutterSession().get("nom");
+  {
+    var id=await FlutterSession().get("id");
+    var nom=await FlutterSession().get("nom");
+
+    setState(() {
+      userId = id;
+    });
+    setState(() {
+    userName= nom;
+    });
   print("test de session"+userId.toString()+" / "+userName);
+  }
+  @override
+  void initState() {
+    super.initState();
+
 
 
   }
 
+  static List<String> getMarques(){
+    List<String> marques=List<String>() ;
+
+    getConnection().then((conn) async {
+
+      var results = await conn.query('select libelle from marques ');
+        for (var row in results) {
+          marques.add(row[0]);
+          print("marque :"+row[0]);
+        }
 
 
-  Future<MySqlConnection> getConnection() async {
+    });
+    return marques;
+
+
+  }
+  static List<String> getGategories(){
+    List<String> categories=List<String>() ;
+
+
+    getConnection().then((conn) async {
+
+      var results = await conn.query('select libelle from types ');
+      for (var row in results) {
+        categories.add(row[0]);
+        print("categorie :"+row[0]);
+      }
+
+    });
+    return categories;
+  }
+
+  _ajout(numtaxi, numAgrement, numImmatriculation, image, marque,type,chauffeur_id) async {
+    // Open a connection (testdb should already exist)
+    print('in insert method');
+    int marque_id;
+    int type_id;
+
+    getConnection().then((conn) async {
+      var result0 = await conn.query("select id from marques where libelle=?",[marque]);
+
+      for (var row in result0) {
+        marque_id=row[0];
+        print("marque_id :"+row[0].toString());
+      }
+      var result01 = await conn.query("select id from types where libelle=?",[type]);
+
+      for (var row in result01) {
+        type_id=row[0];
+        print("type_id :"+row[0].toString());
+      }
+      var now = new DateTime.now();
+
+      var result = await conn.query(
+
+          'insert into vehicules (numTaxi, numAgrement, numImmatriculation,deleted_at,image, marque_id, type_id,chauffeur_id,created_at, updated_at) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+          [numtaxi, numAgrement, numImmatriculation, null,image, marque_id,type_id,chauffeur_id,now.toUtc(),null]);
+
+      print('Inserted row id=${result.insertId}');
+
+      // Finally, close the connection
+      upload(_image);
+      await conn.close();
+    });
+
+  //  if(_character==SingingCharacter.femme){
+   //   vsexe=1;
+    //}else if(_character==SingingCharacter.homme){
+    //  vsexe=2;
+  //  }
+    // Insert some data
+
+  }
+
+  Future getImageGallery() async{
+    var imageFile = await ImagePicker.pickImage(source: ImageSource.gallery);
+
+    final tempDir =await getTemporaryDirectory();
+    final path = tempDir.path;
+
+    int rand= new Math.Random().nextInt(100000);
+
+    Img.Image image= Img.decodeImage(imageFile.readAsBytesSync());
+    Img.Image smallerImg = Img.copyResize(image,height :500);
+    getUser();
+
+    var compressImg= new File("$path/$userId.jpg")
+      ..writeAsBytesSync(Img.encodeJpg(smallerImg, quality: 85));
+
+
+    setState(() {
+      _image = compressImg;
+    });
+  }
+
+  Future upload(File imageFile) async{
+    var stream= new http.ByteStream(DelegatingStream.typed(imageFile.openRead()));
+    var length= await imageFile.length();
+    var uri = Uri.parse("http://10.0.2.2/taxiapp/upload.php");
+
+    var request = new http.MultipartRequest("POST", uri);
+
+    var multipartFile = new http.MultipartFile("image", stream, length, filename: basename(imageFile.path));
+    request.fields['title'] = ctitle;
+    request.files.add(multipartFile);
+
+    var response = await request.send();
+
+    if(response.statusCode==200){
+      print("Image Uploaded");
+    }else{
+      print("Upload Failed");
+    }
+    response.stream.transform(utf8.decoder).listen((value) {
+      print(value);
+    });
+  }
+
+  static Future<MySqlConnection> getConnection() async {
     final conn = await MySqlConnection.connect(ConnectionSettings(
         host: '10.0.2.2', port: 3306, user: 'root', db: 'taxiapp'));
     return conn;
@@ -42,6 +189,8 @@ class _AjouterVehiculeState extends State<AjouterVehicule> {
   @override
   @override
   Widget build(BuildContext context) {
+   // getMarques();
+  //  getGategories();
     return Scaffold(
       body: Stack(
         fit: StackFit.expand,
@@ -83,6 +232,7 @@ class _AjouterVehiculeState extends State<AjouterVehicule> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
+
                         Container(
                           margin: EdgeInsets.only(
                               left: SizeConfig.safeBlockHorizontal * 5,
@@ -96,6 +246,98 @@ class _AjouterVehiculeState extends State<AjouterVehicule> {
                                 fontFamily: "Pacificio",
                               )),
                         ),
+                        Container(
+                          height: SizeConfig.safeBlockHorizontal * 15,
+                          child: Container(
+                            padding: EdgeInsets.only(
+                                left: SizeConfig.safeBlockHorizontal * 0),
+                            margin: EdgeInsets.only(
+                                top: SizeConfig.safeBlockHorizontal * 4,
+                                left: SizeConfig.safeBlockHorizontal * 4,
+                                right: SizeConfig.safeBlockHorizontal * 4),
+
+                            child:DropdownButton<String>(
+                              hint: Text("Catégorie ",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Color(0xFFF032f41),
+                                    fontSize: 18,
+                                    fontFamily: "Pacificio",
+                                  )),
+                              isExpanded: true,
+                              value: dropdownvalue,
+                              icon: Icon(Icons.keyboard_arrow_down,color: Color(0xFFF032f41),
+                                ),
+                              iconSize: 27,
+                              elevation: 20,
+                              onChanged: (String newval){
+                                setState((){
+                                  dropdownvalue = newval;
+                                  print("select:"+dropdownvalue);
+
+                                });
+
+                              },
+                              items: categories
+                                  .map<DropdownMenuItem<String>>((String value){
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
+                            ),
+                          ),
+                        ),
+
+                      /*  RaisedButton(
+                          child: Text("UPLOAD"),
+                          onPressed:(){
+                            upload(_image);
+                          },
+                        ),*/
+                        Container(
+                          height: SizeConfig.safeBlockHorizontal * 15,
+                          child: Container(
+                            padding: EdgeInsets.only(
+                                left: SizeConfig.safeBlockHorizontal * 0),
+                            margin: EdgeInsets.only(
+                                top: SizeConfig.safeBlockHorizontal * 4,
+                                left: SizeConfig.safeBlockHorizontal * 4,
+                                right: SizeConfig.safeBlockHorizontal * 4),
+
+                            child:DropdownButton<String>(
+                              hint: Text("Marque ",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Color(0xFFF032f41),
+                                    fontSize: 18,
+                                    fontFamily: "Pacificio",
+                                  )),
+                              isExpanded: true,
+                              value: dropdownvalue1,
+                              icon: Icon(Icons.keyboard_arrow_down,color: Color(0xFFF032f41),
+                              ),
+                              iconSize: 27,
+                              elevation: 20,
+                              onChanged: (String newval){
+                                setState((){
+                                  dropdownvalue1 = newval;
+                                  print("select:"+dropdownvalue1);
+                                });
+
+                              },
+                              items: marques
+                                  .map<DropdownMenuItem<String>>((String value){
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
+                            ),
+                          ),
+                        ),
+
+
                         SizedBox(height: SizeConfig.safeBlockHorizontal * 4),
                         Container(
                           height: SizeConfig.safeBlockHorizontal * 15,
@@ -138,81 +380,45 @@ class _AjouterVehiculeState extends State<AjouterVehicule> {
                             ),
                           ),
                         ),
-                        Container(
-                          height: SizeConfig.safeBlockHorizontal * 15,
-                          child: Container(
-                            padding: EdgeInsets.only(
-                                left: SizeConfig.safeBlockHorizontal * 0),
-                            margin: EdgeInsets.only(
-                                top: SizeConfig.safeBlockHorizontal * 4,
-                                left: SizeConfig.safeBlockHorizontal * 4,
-                                right: SizeConfig.safeBlockHorizontal * 4),
-                            child: DropdownButton(
-                              isExpanded: true,
-                              items: <String>[
-                                'Catégorie',
-                                'Petit Taxi',
-                                'Grand Taxi',
-                                'Mini Bus',
-                                'Voiture de luxe',
-                              ].map<DropdownMenuItem<String>>(
-                                (String value) {
-                                  return DropdownMenuItem(
-                                    value: value,
-                                    child: Text(value),
-                                  );
-                                },
-                              ).toList(),
-                              value: dropdownValue,
-                              onChanged: (value) {
-                                setState(() {
-                                  dropdownValue = value;
-                                });
-                              },
-                            ),
-                          ),
-                        ),
-                        Container(
-                          height: SizeConfig.safeBlockHorizontal * 15,
-                          child: Container(
-                            padding: EdgeInsets.only(
-                                left: SizeConfig.safeBlockHorizontal * 0),
-                            margin: EdgeInsets.only(
-                                top: SizeConfig.safeBlockHorizontal * 4,
-                                left: SizeConfig.safeBlockHorizontal * 4,
-                                right: SizeConfig.safeBlockHorizontal * 4),
-                            child: DropdownButton(
-                              isExpanded: true,
-                              items: <String>[
-                                'Marque',
-                                'marque1',
-                                'marque2',
-                                'marque3'
-                              ].map<DropdownMenuItem<String>>(
-                                (String value) {
-                                  return DropdownMenuItem(
-                                    value: value,
-                                    child: Text(value),
-                                  );
-                                },
-                              ).toList(),
-                              value: dropdownValue1,
-                              onChanged: (value) {
-                                setState(() {
-                                  dropdownValue1 = value;
-                                });
-                              },
-                            ),
-                          ),
-                        ),
                         SizedBox(height: SizeConfig.safeBlockHorizontal * 4),
                         Container(
-                            height: SizeConfig.safeBlockHorizontal * 13,
+                          height: SizeConfig.safeBlockHorizontal * 15,
+
+
+                          child:RaisedButton(
+                            color: Colors.white,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16.0),
+                                side: BorderSide(color: Color(0xFFF032f41),width: 0.3)),
+                            child: Row(
+                              children: <Widget>[
+                                Text("Ajouter une image", style: TextStyle(
+                                  color: Color(0xFFF032f41),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+
+
+                                )),
+                                SizedBox(width: SizeConfig.safeBlockHorizontal * 20,),
+                                Icon(Icons.image,size: 35,),
+                              ],
+                            ),
+                            onPressed: getImageGallery,
+
+                          ),
+
+                        ),
+                        SizedBox(height: SizeConfig.safeBlockHorizontal * 4),
+
+                        Container(
+                            height: SizeConfig.safeBlockHorizontal * 15,
                          child: RaisedButton(
                             onPressed: () {
-                              print("heey1");
                               getUser();
- },
+                              _ajout(numtaxi.text, agrem.text, immatr.text, null, dropdownvalue1,dropdownvalue,userId);
+
+
+                            },
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(16.0),
                                 side: BorderSide(color: Colors.white)),
@@ -229,7 +435,7 @@ class _AjouterVehiculeState extends State<AjouterVehicule> {
                                     margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 10),
 
                                     padding: EdgeInsets.only(left:SizeConfig.safeBlockHorizontal * 3,right: SizeConfig.safeBlockHorizontal * 7),
-                                    child: Text("se connecter", style: TextStyle(
+                                    child: Text("Ajouter", style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 24,
                                       fontWeight: FontWeight.bold,
@@ -254,7 +460,10 @@ class _AjouterVehiculeState extends State<AjouterVehicule> {
                                 ],
                               ),
                             ),),
-                        ),],
+                        ),
+                        SizedBox(height: SizeConfig.safeBlockHorizontal * 4),
+                      ],
+
                     ),
                   )
                   ),

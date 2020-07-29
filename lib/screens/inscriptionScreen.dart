@@ -206,7 +206,9 @@ class _InscriptionScreenState extends State<InscriptionScreen> {
                                   print(vlogin.toString());
                                   final algorithm = PBKDF2();
                                   final hash = Password.hash(vmdp.text, algorithm);
-                                _inscription(vlogin.text, hash, vcin.text, vnom.text, vprenom.text, vtel.text,vsexe);
+                                  print("the password is "+hash);
+
+                                  _inscription(vlogin.text, hash, vcin.text, vnom.text, vprenom.text, vtel.text,vsexe);
 
                                 },
                                 shape: RoundedRectangleBorder(

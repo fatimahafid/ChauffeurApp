@@ -24,6 +24,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final password = TextEditingController();
 
 
+
   Future<MySqlConnection> getConnection() async {
     final conn = await MySqlConnection.connect(ConnectionSettings(
         host: '10.0.2.2', port: 3306, user: 'root', db: 'taxiapp'));
@@ -192,8 +193,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               else{
                               var results = await conn.query('select login, password,id,nom from chauffeurs where login = ?',
                                   [login.text]);
-                             /// final algorithm = PBKDF2();
-                            //  final hash = Password.hash(password, algorithm);
+
 
 
 
@@ -209,11 +209,15 @@ class _LoginScreenState extends State<LoginScreen> {
                                   nom = row[3];
 
                                 }
-                                //print(Password.verify(password.text, passw));
+                                final algorithm = PBKDF2();
+                                String hash = Password.hash(password.text ,algorithm);
+                              //  if (hash==passw)
+                                print("the password in data base is "+passw);
+                                print("the same password in input  is "+hash);
 
-                               // if (Password.verify(password.text, passw));
-                                 if (password.text==passw) {
-                                   //print("infos" +id+"/"+nom);
+
+                                if(Password.verify(password.text, passw)    )                              {
+                                   print("infos" +id.toString()+"/"+nom);
                                    await session.set("id", id.toString());
                                    await session.set("nom", nom);
 
