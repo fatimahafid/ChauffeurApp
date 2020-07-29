@@ -3,7 +3,7 @@ import 'package:login_dash_animation/animations/fadeAnimation.dart';
 import 'package:login_dash_animation/components/customButton.dart';
 import 'package:login_dash_animation/components/customButtonAnimation.dart';
 import 'package:login_dash_animation/screens/loginScreen.dart';
-import 'package:login_dash_animation/screens/inscriptionScreen.dart';
+import 'package:login_dash_animation/screens/InscriptionScreen.dart';
 import 'package:login_dash_animation/SizeConfig.dart';
 import 'loginScreen.dart';
 import 'Menu.dart';

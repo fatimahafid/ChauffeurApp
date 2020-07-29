@@ -25,19 +25,17 @@ class _ExampleState extends State<Example> {
     final conn = await MySqlConnection.connect(ConnectionSettings(
         host: '10.0.2.2', port: 3306, user: 'root', db: 'taxiapp'));
 
-    // Create a table
-    await conn.query(
-        'CREATE TABLE user1 (id int NOT NULL AUTO_INCREMENT PRIMARY KEY, name varchar(255), email varchar(255), age int)');
 
     // Insert some data
-    var result = await conn.query(
-        'insert into user1 (name, email, age) values (?, ?, ?)',
-        ['Bob', 'bob@bob.com', 25]);
-    print('Inserted row id=${result.insertId}');
+  //  var result = await conn.query(
+    //    'insert into user1 (name, email, age) values (?, ?, ?)',
+     //   ['Bob', 'bob@bob.com', 25]);
+    //print('Inserted row id=${result.insertId}');
 
     // Query the database using a parameterized query
+    var id=1;
     var results = await conn
-        .query('select name, email from user1 where id = ?', [result.insertId]);
+        .query('select login, password from chauffeurs where id = ?', [id]);
     for (var row in results) {
       print('Name: ${row[0]}, email: ${row[1]}');
     }
