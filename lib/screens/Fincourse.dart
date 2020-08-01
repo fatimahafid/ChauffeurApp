@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
 import 'package:login_dash_animation/animations/color_loader.dart';
 import 'package:login_dash_animation/animations/fadeAnimation.dart';
 import 'package:login_dash_animation/components/customButton.dart';
@@ -6,24 +8,69 @@ import 'package:login_dash_animation/components/customButtonAnimation.dart';
 import 'package:login_dash_animation/screens/loginScreen.dart';
 import 'package:login_dash_animation/screens/Menu.dart';
 import 'package:login_dash_animation/SizeConfig.dart';
+import 'package:flutter_session/flutter_session.dart';
+import 'package:mysql1/mysql1.dart' hide Row;
 
 
 
-
-
-import 'loginScreen.dart';
-import 'Menu.dart';
 
 
 
 class Fincourse extends StatefulWidget {
+
   @override
   _FincourseState createState() => _FincourseState();
 }
-const jaune = const Color(0xfffed136);
-const grisFon = const Color(0xff212529);
 const jauneFon = const Color(0xffe6b301);
+
 class _FincourseState extends State<Fincourse> {
+
+  var courseId;
+  var tablename='';
+
+
+
+  static Future<MySqlConnection> getConnection() async {
+    final conn = await MySqlConnection.connect(ConnectionSettings(
+        host: '10.0.2.2', port: 3306, user: 'root', db: 'taxiapp'));
+    return conn;
+  }
+
+  getTablename() async
+  {
+    var nom=await FlutterSession().get("tablename");
+    setState(() {
+      tablename = nom;
+    });
+
+    print("session : "+tablename.toString());
+  }
+
+  getCourseId() async
+  {
+    var id=await FlutterSession().get("courseId");
+    setState(() {
+      courseId = id;
+    });
+
+    print("test de session"+courseId.toString());
+  }
+
+  fincourse(){
+    getTablename();
+    getCourseId();
+    getConnection().then((conn) async {
+      var result = await conn.query(
+
+          'delete from ${tablename} where id=?',
+          [courseId
+          ]);
+
+    });
+
+  }
+
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -79,14 +126,42 @@ class _FincourseState extends State<Fincourse> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    FadeAnimation(3.2,CustomButtonAnimation(
+                    RaisedButton(
+                      onPressed: () {
+                        fincourse();
 
-                      label: "Fin de course",
-                      backbround: Colors.white,
-                      borderColor: Colors.white,
-                      fontColor:jauneFon ,
-                      child: Menu(),
-                    )),
+                      },
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16.0),
+                          side: BorderSide(color: Colors.white)),
+                      color: Colors.white ,
+                      textColor: Color(0xffe6b301),
+
+                      child: Container(
+                        height: SizeConfig.safeBlockVertical * 9,
+                        width: double.infinity,
+                        child: Row(
+                          children: <Widget>[
+                            Center(
+                              child: Container(
+
+                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 18),
+
+                                padding: EdgeInsets.only(left:SizeConfig.safeBlockHorizontal * 3,right: SizeConfig.safeBlockHorizontal * 7),
+                                child: Text("Fin de course", style: TextStyle(
+                                  color: Color(0xffe6b301),
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.bold,
+
+
+                                )),
+                              ),
+                            ),
+                            SizedBox(width: 0),
+
+                          ],
+                        ),
+                      ),),
                     SizedBox(height: SizeConfig.safeBlockHorizontal * 2),
                   ],
                 )

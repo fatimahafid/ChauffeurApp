@@ -8,6 +8,8 @@ import 'package:login_dash_animation/screens/ajouterVehicule.dart';
 import 'package:mysql1/mysql1.dart' hide Row;
 import 'package:password/password.dart';
 import 'package:flutter_session/flutter_session.dart';
+import 'package:flutter_session/flutter_session.dart';
+
 
 
 
@@ -205,15 +207,14 @@ class _LoginScreenState extends State<LoginScreen> {
                                 for (var row in results) {
                                   passw = row[1];
                                   id = row[2];
-
                                   nom = row[3];
 
                                 }
                                 final algorithm = PBKDF2();
-                                String hash = Password.hash(password.text ,algorithm);
+                               // String hash = Password.hash(password.text ,algorithm);
                               //  if (hash==passw)
-                                print("the password in data base is "+passw);
-                                print("the same password in input  is "+hash);
+                              //  print("the password in data base is "+passw);
+                              //  print("the same password in input  is "+hash);
 
 
                                 if(Password.verify(password.text, passw)    )                              {

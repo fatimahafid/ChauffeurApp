@@ -9,7 +9,11 @@ import 'package:login_dash_animation/screens/Fincourse.dart';
 import 'package:login_dash_animation/screens/modifierVehicule.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:login_dash_animation/SizeConfig.dart';
-import 'package:login_dash_animation/SizeConfig.dart';
+import 'package:flutter_session/flutter_session.dart';
+import 'package:mysql1/mysql1.dart' hide Row;
+import 'package:location/location.dart';
+
+
 
 
 
@@ -19,10 +23,144 @@ class Menu extends StatefulWidget {
 }
 
 class _MenuState extends State<Menu> {
+
+  var tablename='';
+  var carId;
+  var session = FlutterSession();
+
+  getTablebycategorie() async
+  {
+    var categorie=await FlutterSession().get("categorie");
+if(categorie=='Petit taxi')
+
+ setState(() {
+      tablename = 'PilePT';
+    });
+else if(categorie=='Grand taxi')
+    setState(() {
+      tablename = 'PileGt';
+    });
+else
+  setState(() {
+    tablename = 'PileVL';
+  });
+    print("test de session"+tablename.toString());
+  }
+
+  getvehicule() async
+  {
+    var id;
+    var userid=await FlutterSession().get("id");
+
+    getConnection().then((conn) async {
+      var result = await conn.query(
+
+          'select id from vehicules where chauffeur_id=?',
+          [
+
+            userid,
+
+          ]);
+
+      await session.set("tablename",tablename);
+
+      for (var row in result) {
+        id= row[0];
+
+      }
+      setState(() {
+        carId = id;
+      });
+      print(' kkk'+userid.toString()+carId.toString());
+    });
+
+
+    print("test de session"+carId.toString());
+  }
+  static Future<MySqlConnection> getConnection() async {
+    final conn = await MySqlConnection.connect(ConnectionSettings(
+        host: '10.0.2.2', port: 3306, user: 'root', db: 'taxiapp'));
+    return conn;
+  }
+
+  _Addtopile() async {
+    getTablebycategorie();
+    getvehicule();
+    getConnection().then((conn) async {
+      var result = await conn.query(
+
+          'insert into ${tablename} (vehicule_id, touriste_id) values (?, ?)',
+          [
+
+            carId,
+            null
+          ]);
+
+      await session.set("courseId",result.insertId);
+      await session.set("tablename",tablename);
+
+      print('Inserted row id=${result.insertId}');
+    });
+    updatlocation(_locationData);
+
+  }
+
+  Location location = new Location();
+
+  bool _serviceEnabled;
+  PermissionStatus _permissionGranted;
+  LocationData _locationData;
+
+  getLocation() async{
+    _serviceEnabled = await location.serviceEnabled();
+    if (!_serviceEnabled)  {
+      _serviceEnabled = await location.requestService();
+      if (!_serviceEnabled) {
+        return;
+      }
+    }
+
+    _permissionGranted = await location.hasPermission();
+    if (_permissionGranted == PermissionStatus.denied) {
+      _permissionGranted = await location.requestPermission();
+      if (_permissionGranted != PermissionStatus.granted) {
+        return;
+      }
+    }
+
+    var _location = await location.getLocation();
+
+    setState(() {
+      _locationData = _location;
+    });
+    print("location"+_locationData.toString());
+  }
+
+  updatlocation(location){
+    getConnection().then((conn) async {
+      var result = await conn.query(
+
+          'update vehicules set location=? where id=?',
+          [
+
+            _locationData.toString(),
+            carId,
+
+          ]);
+
+    
+
+      print('Inserted row id=${result.insertId}');
+      await conn.close();
+
+    });
+  }
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-
+    location.onLocationChanged.listen((LocationData currentLocation) {
+      updatlocation(currentLocation) ;
+    });
     return Scaffold(
       body: Stack(
         fit: StackFit.expand,
@@ -106,6 +244,9 @@ class _MenuState extends State<Menu> {
                           children: <Widget>[
                             new GestureDetector(
                               onTap: () {
+                                getLocation();
+                                _Addtopile();
+
                                 /* AlertDialog(
                                   title: Text("Êtes-vous sur place ?"),
                                   content: Text("En cliquant sur OUI vous faite partie de la file d'attente."),

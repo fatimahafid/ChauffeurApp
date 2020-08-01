@@ -16,6 +16,8 @@ import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'package:image/image.dart' as Img;
 import 'dart:math' as Math;
+import 'package:flutter_session/flutter_session.dart';
+
 
 
 
@@ -25,8 +27,9 @@ class AjouterVehicule extends StatefulWidget {
 }
 
 class _AjouterVehiculeState extends State<AjouterVehicule> {
+  var session = FlutterSession();
   File _image;
-
+  String msg = '';
   final immatr = TextEditingController();
   final agrem = TextEditingController();
   final numtaxi = TextEditingController();
@@ -57,8 +60,6 @@ class _AjouterVehiculeState extends State<AjouterVehicule> {
   void initState() {
     super.initState();
 
-
-
   }
 
   static List<String> getMarques(){
@@ -79,28 +80,35 @@ class _AjouterVehiculeState extends State<AjouterVehicule> {
 
   }
   static List<String> getGategories(){
-    List<String> categories=List<String>() ;
+    List<String> categoris=List<String>() ;
 
 
     getConnection().then((conn) async {
 
       var results = await conn.query('select libelle from types ');
       for (var row in results) {
-        categories.add(row[0]);
+        categoris.add(row[0]);
         print("categorie :"+row[0]);
       }
 
     });
-    return categories;
+
+    return categoris;
   }
 
-  _ajout(numtaxi, numAgrement, numImmatriculation, image, marque,type,chauffeur_id) async {
+  _ajout(numtaxi, numAgrement, numImmatriculation, image, marque,type,chauffeur_id,BuildContext context) async {
     // Open a connection (testdb should already exist)
     print('in insert method');
     int marque_id;
     int type_id;
+    if(immatr.text=="" )
+    {
+      setState(() {
+        msg = "Remplir les champs";
+      });
+    } else {
 
-    getConnection().then((conn) async {
+      getConnection().then((conn) async {
       var result0 = await conn.query("select id from marques where libelle=?",[marque]);
 
       for (var row in result0) {
@@ -120,12 +128,23 @@ class _AjouterVehiculeState extends State<AjouterVehicule> {
           'insert into vehicules (numTaxi, numAgrement, numImmatriculation,deleted_at,image, marque_id, type_id,chauffeur_id,created_at, updated_at) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
           [numtaxi, numAgrement, numImmatriculation, null,image, marque_id,type_id,chauffeur_id,now.toUtc(),null]);
 
+      await session.set("categorie", type);
+
       print('Inserted row id=${result.insertId}');
+
+      await session.set("carId",result.insertId);
 
       // Finally, close the connection
       upload(_image);
       await conn.close();
-    });
+
+          });
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => Menu()),
+      );
+    }
 
   //  if(_character==SingingCharacter.femme){
    //   vsexe=1;
@@ -135,6 +154,8 @@ class _AjouterVehiculeState extends State<AjouterVehicule> {
     // Insert some data
 
   }
+
+
 
   Future getImageGallery() async{
     var imageFile = await ImagePicker.pickImage(source: ImageSource.gallery);
@@ -192,6 +213,13 @@ class _AjouterVehiculeState extends State<AjouterVehicule> {
    // getMarques();
   //  getGategories();
     return Scaffold(
+
+
+
+
+
+
+
       body: Stack(
         fit: StackFit.expand,
         children: <Widget>[
@@ -201,10 +229,9 @@ class _AjouterVehiculeState extends State<AjouterVehicule> {
             height: MediaQuery.of(context).size.height,
             color: Color(0xFFF001117).withOpacity(0.8),
           ),
-          Column(
-            children: <Widget>[],
-          ),
+
           SafeArea(
+
             child: SingleChildScrollView(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -370,6 +397,7 @@ class _AjouterVehiculeState extends State<AjouterVehicule> {
                         Container(
                           height: SizeConfig.safeBlockHorizontal * 15,
                           child: CustomTextField(
+                          
                             controller:numtaxi,
                             label: "Num Taxi",
                             isPassword: false,
@@ -399,7 +427,7 @@ class _AjouterVehiculeState extends State<AjouterVehicule> {
 
 
                                 )),
-                                SizedBox(width: SizeConfig.safeBlockHorizontal * 20,),
+                                SizedBox(width: SizeConfig.safeBlockHorizontal * 30),
                                 Icon(Icons.image,size: 35,),
                               ],
                             ),
@@ -408,14 +436,26 @@ class _AjouterVehiculeState extends State<AjouterVehicule> {
                           ),
 
                         ),
-                        SizedBox(height: SizeConfig.safeBlockHorizontal * 4),
+                        SizedBox(height: SizeConfig.safeBlockHorizontal * 2),
+                        Container(
+                          child:Center(
+                            child: Text(msg, style: TextStyle(
+                              color: Colors.redAccent,
+                              fontSize: 16,
+                              //fontWeight: FontWeight.bold,
+
+
+                            )),
+                          ),
+                        ),
+                        SizedBox(height: SizeConfig.safeBlockHorizontal * 2),
 
                         Container(
                             height: SizeConfig.safeBlockHorizontal * 15,
                          child: RaisedButton(
                             onPressed: () {
                               getUser();
-                              _ajout(numtaxi.text, agrem.text, immatr.text, null, dropdownvalue1,dropdownvalue,userId);
+                              _ajout(numtaxi.text, agrem.text, immatr.text, null, dropdownvalue1,dropdownvalue,userId,context);
 
 
                             },
@@ -432,18 +472,21 @@ class _AjouterVehiculeState extends State<AjouterVehicule> {
                                 children: <Widget>[
                                   Container(
 
-                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 10),
 
-                                    padding: EdgeInsets.only(left:SizeConfig.safeBlockHorizontal * 3,right: SizeConfig.safeBlockHorizontal * 7),
-                                    child: Text("Ajouter", style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 24,
-                                      fontWeight: FontWeight.bold,
+                                    padding: EdgeInsets.only(left:SizeConfig.safeBlockHorizontal * 28),
+                                     child:Center(
+                                       child: Text("Ajouter", style: TextStyle(
+
+                                        color: Colors.white,
+                                        fontSize: 22,
+                                        fontWeight: FontWeight.bold,
+
 
 
                                     )),
+                                     ),
                                   ),
-                                  SizedBox(width: 0),
+                                  SizedBox(width: SizeConfig.safeBlockHorizontal *9),
                                   Container(
                                     //width: 50.0,
                                     //height: 50.0,
