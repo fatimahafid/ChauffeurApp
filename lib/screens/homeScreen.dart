@@ -9,7 +9,6 @@ import 'package:login_dash_animation/screens/mdpoublie.dart';
 import 'loginScreen.dart';
 import 'Menu.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sms/sms.dart';
 import 'package:mysql1/mysql1.dart' hide Row;
 
 
