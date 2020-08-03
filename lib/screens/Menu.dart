@@ -160,7 +160,7 @@ else
     });
 
 
-    print("test de session"+carId.toString());
+    print("test de session menu"+carId.toString());
   }
   Future<MySqlConnection> getConnection() async {
     final conn = await MySqlConnection.connect(ConnectionSettings(

@@ -209,7 +209,11 @@ class _InscriptionScreenState extends State<InscriptionScreen> {
                                   print("the password is "+hash);
 
                                   _inscription(vlogin.text, hash, vcin.text, vnom.text, vprenom.text, vtel.text,vsexe);
-
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => AjouterVehicule()),
+                                  );
                                 },
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(16.0),
@@ -227,7 +231,7 @@ class _InscriptionScreenState extends State<InscriptionScreen> {
                                         margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 10),
 
                                         padding: EdgeInsets.only(left:SizeConfig.safeBlockHorizontal * 3,right: SizeConfig.safeBlockHorizontal * 7),
-                                        child: Text("se connecter", style: TextStyle(
+                                        child: Text("S'inscrire", style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 24,
                                           fontWeight: FontWeight.bold,
