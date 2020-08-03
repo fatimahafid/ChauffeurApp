@@ -1,9 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:login_dash_animation/components/buttonLoginAnimation.dart';
 import 'package:login_dash_animation/components/customTextfield.dart';
+import 'package:login_dash_animation/local_notifications_helper.dart';
 import 'package:login_dash_animation/screens/editProfile.dart';
+import 'package:login_dash_animation/screens/homeScreen.dart';
 import 'package:login_dash_animation/screens/loginScreen.dart';
 import 'package:login_dash_animation/screens/Fincourse.dart';
 import 'package:login_dash_animation/screens/modifierVehicule.dart';
@@ -12,6 +15,12 @@ import 'package:login_dash_animation/SizeConfig.dart';
 import 'package:flutter_session/flutter_session.dart';
 import 'package:mysql1/mysql1.dart' hide Row;
 import 'package:location/location.dart';
+import 'dart:async';
+import 'package:login_dash_animation/widgets/local_notification_widget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+
+
 
 
 
@@ -22,11 +31,85 @@ class Menu extends StatefulWidget {
   _MenuState createState() => _MenuState();
 }
 
+
+
 class _MenuState extends State<Menu> {
 
+  final notifications =FlutterLocalNotificationsPlugin();
   var tablename='';
+  var isaffected;
   var carId;
+  var courseId;
   var session = FlutterSession();
+  var touriste;
+  var isStopped=false;
+  String username='farah';
+
+  @override
+  void initState() {
+    super.initState();
+    getTablebycategorie();
+    getvehicule();
+    final settingsAndroid = AndroidInitializationSettings('icone');
+    final settingsIOS = IOSInitializationSettings(
+        onDidReceiveLocalNotification: (id, title, body, payload) =>
+            onSelectNotification(payload));
+
+    notifications.initialize(
+        InitializationSettings(settingsAndroid, settingsIOS),
+        onSelectNotification: onSelectNotification);
+
+  }
+  Future onSelectNotification(String payload) async => await Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => Menu()),
+  );
+
+  checkcaraffected(){
+
+    getConnection().then((conn) async {
+      var result = await conn.query(
+          'select touriste_id from ${tablename} where id=?',
+          [
+            courseId,
+          ]);
+
+      await session.set("isaffected",true);
+
+      for (var row in result) {
+        touriste= row[0];
+
+      }
+      if(touriste==null)
+        setState(() {
+          isaffected =false;
+        });
+      else
+        isaffected =true;
+
+
+      if(isaffected==true) {
+        setState(() {
+          isStopped=true;
+        });
+
+      String msg="Vous etes affectez au touriste numéro "+touriste.toString();
+        showOngoingNotification(
+            notifications, title: msg,
+            body: null);
+      }
+      else
+        setState(() {
+          isStopped=false;
+        });
+      print(' is that car affecetd ? ' +isaffected.toString());
+
+        await conn.close();
+
+
+    });
+
+  }
 
   getTablebycategorie() async
   {
@@ -52,6 +135,7 @@ else
     var id;
     var userid=await FlutterSession().get("id");
 
+    print('this is the id of user '+userid.toString());
     getConnection().then((conn) async {
       var result = await conn.query(
 
@@ -72,20 +156,31 @@ else
         carId = id;
       });
       print(' kkk'+userid.toString()+carId.toString());
+      await conn.close();
     });
 
 
     print("test de session"+carId.toString());
   }
-  static Future<MySqlConnection> getConnection() async {
+  Future<MySqlConnection> getConnection() async {
     final conn = await MySqlConnection.connect(ConnectionSettings(
         host: '10.0.2.2', port: 3306, user: 'root', db: 'taxiapp'));
+   //if(conn!=null)
     return conn;
+
+   }
+
+    logout() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.clear();
+    Navigator.pushReplacement(context,
+        MaterialPageRoute(builder: (BuildContext ctx) => HomeScreen()));
   }
 
   _Addtopile() async {
     getTablebycategorie();
     getvehicule();
+    print('this is the car id'+carId.toString());
     getConnection().then((conn) async {
       var result = await conn.query(
 
@@ -95,14 +190,18 @@ else
             carId,
             null
           ]);
+      setState(() {
+        courseId = result.insertId;
+      });
 
       await session.set("courseId",result.insertId);
       await session.set("tablename",tablename);
 
       print('Inserted row id=${result.insertId}');
+      await conn.close();
+
     });
     updatlocation(_locationData);
-
   }
 
   Location location = new Location();
@@ -150,19 +249,22 @@ else
 
     
 
-      print('Inserted row id=${result.insertId}');
+      //print('Inserted row id=${result.insertId}');
       await conn.close();
 
     });
   }
   @override
   Widget build(BuildContext context) {
+
+
     SizeConfig().init(context);
     location.onLocationChanged.listen((LocationData currentLocation) {
       updatlocation(currentLocation) ;
     });
     return Scaffold(
       body: Stack(
+
         fit: StackFit.expand,
         children: <Widget>[
           Image.asset("assets/images/bg2.jpg", fit: BoxFit.cover),
@@ -170,6 +272,7 @@ else
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,
             color: Color(0xFFF001117).withOpacity(0.7),
+
           ),
           Container(
             padding: EdgeInsets.only(left: SizeConfig.safeBlockVertical * 2, top: SizeConfig.safeBlockVertical *7, right: SizeConfig.safeBlockHorizontal *4),
@@ -186,7 +289,7 @@ else
                 Row(
                   children: <Widget>[
                     Text(
-                      "Farah ",
+                      username,
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 22,
@@ -195,12 +298,18 @@ else
                       ),
                       textAlign: TextAlign.right,
                     ),
-                    Container(
-                      width: SizeConfig.safeBlockHorizontal * 14,
-                      height: SizeConfig.safeBlockVertical * 10,
-                      child: CircleAvatar(
-                        radius: 50.0,
-                        backgroundImage: AssetImage('assets/images/farah.jpg'),
+                    SizedBox(width:  SizeConfig.safeBlockVertical * 2),
+
+                    new GestureDetector(
+                    onTap: () {
+                       print('logout');
+                       logout();
+                    },
+                      child: Icon(
+                        Icons.power_settings_new,
+                        color: Colors.white,
+                        size: 33.0,
+                        semanticLabel: '',
                       ),
                     ),
                   ],
@@ -246,6 +355,15 @@ else
                               onTap: () {
                                 getLocation();
                                 _Addtopile();
+                                Timer.periodic(Duration(seconds: 5), (timer) {
+                                  print('aaa'+isStopped.toString());
+                                    if (isStopped==true) {
+                                      timer.cancel();                                }
+                                    else
+                                    checkcaraffected();
+
+                                });
+
 
                                 /* AlertDialog(
                                   title: Text("Êtes-vous sur place ?"),
@@ -339,6 +457,7 @@ else
                             ),
                             new GestureDetector(
                               onTap: () {
+
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -537,116 +656,3 @@ else
   }
 }
 
-/*
-Card(
-child: Padding(
-padding: EdgeInsets.only(top:30,left: 10,bottom:30,right: 10),
-child: Row(
-children: <Widget>[
-Text('premiere option', style: TextStyle(
-fontSize: 20,)),
-SizedBox(
-width: 150.0,
-),
-Container(
-decoration: new BoxDecoration(
-shape: BoxShape.circle,// You can use like this way or like the below line
-//borderRadius: new BorderRadius.circular(30.0),
-color: Color(0xffe6b301),
-),
-child:Icon(Icons.arrow_forward, color: Colors.white,size: 40)
-),
-
-
-],
-),
-),
-color: Colors.white,
-),
-
-
-SizedBox(height: 5),
-Card(
-child: Padding(
-padding: EdgeInsets.only(top:30,left: 10,bottom:30,right: 10),
-child: Row(
-children: <Widget>[
-Text('premiere option', style: TextStyle(
-fontSize: 20,)),
-SizedBox(
-width: 150.0,
-),
-Container(
-decoration: new BoxDecoration(
-shape: BoxShape.circle,// You can use like this way or like the below line
-//borderRadius: new BorderRadius.circular(30.0),
-color: Color(0xffe6b301),
-),
-child:Icon(Icons.arrow_forward, color: Colors.white,size: 40)
-),
-
-
-],
-),
-),
-color: Colors.white,
-),
-
-
-SizedBox(height: 5),
-Card(
-child: Padding(
-padding: EdgeInsets.only(top:30,left: 10,bottom:30,right: 10),
-child: Row(
-children: <Widget>[
-Text('premiere option', style: TextStyle(
-fontSize: 20,)),
-SizedBox(
-width: 150.0,
-),
-Container(
-decoration: new BoxDecoration(
-shape: BoxShape.circle,// You can use like this way or like the below line
-//borderRadius: new BorderRadius.circular(30.0),
-color: Color(0xffe6b301),
-),
-child:Icon(Icons.arrow_forward, color: Colors.white,size: 40)
-),
-
-
-],
-),
-),
-color: Colors.white,
-),
-
-
-SizedBox(height: 5),
-Card(
-child: Padding(
-padding: EdgeInsets.only(top:30,left: 10,bottom:30,right: 10),
-child: Row(
-children: <Widget>[
-Text('premiere option', style: TextStyle(
-fontSize: 20,)),
-SizedBox(
-width: 150.0,
-),
-Container(
-decoration: new BoxDecoration(
-shape: BoxShape.circle,// You can use like this way or like the below line
-//borderRadius: new BorderRadius.circular(30.0),
-color: Color(0xffe6b301),
-),
-child:Icon(Icons.arrow_forward, color: Colors.white,size: 40)
-),
-
-
-],
-),
-),
-color: Colors.white,
-),
-
-
-SizedBox(height: 5),*/

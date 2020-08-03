@@ -8,7 +8,7 @@ import 'package:login_dash_animation/screens/ajouterVehicule.dart';
 import 'package:mysql1/mysql1.dart' hide Row;
 import 'package:password/password.dart';
 import 'package:flutter_session/flutter_session.dart';
-import 'package:flutter_session/flutter_session.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 
@@ -180,6 +180,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         SizedBox(height: SizeConfig.safeBlockVertical * 2),
                         RaisedButton(
                           onPressed: () {
+                            String log='';
                             print("heey1");
                             var id;
                             var nom='';
@@ -193,53 +194,97 @@ class _LoginScreenState extends State<LoginScreen> {
 
                               }
                               else{
-                              var results = await conn.query('select login, password,id,nom from chauffeurs where login = ?',
-                                  [login.text]);
+                                log=login.text.replaceAll(new RegExp(r"\s+"), "");
+                                var results = await conn.query('select login, password,id,nom from chauffeurs where login = ?',
+                                    [log]);
 
 
 
 
-                              if (results.isEmpty) {
-                                setState(() {
-                                  msg = "Authetificateur erroné";
-                                });
-                              } else {
-                                for (var row in results) {
-                                  passw = row[1];
-                                  id = row[2];
-                                  nom = row[3];
-
-                                }
-                                final algorithm = PBKDF2();
-                               // String hash = Password.hash(password.text ,algorithm);
-                              //  if (hash==passw)
-                              //  print("the password in data base is "+passw);
-                              //  print("the same password in input  is "+hash);
-
-
-                                if(Password.verify(password.text, passw)    )                              {
-                                   print("infos" +id.toString()+"/"+nom);
-                                   await session.set("id", id.toString());
-                                   await session.set("nom", nom);
-
+                                if (results.isEmpty) {
                                   setState(() {
-                                    msg = "";
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => AjouterVehicule()),
-                                    );
+                                    msg = "Authetificateur erroné";
                                   });
-                                  //Navigator.pushReplacementNamed(context, '/ajouterVéhicule');
                                 } else {
-                                  setState(() {
-                                    msg = "Mot de passe erroné";
-                                  });
-                                }
-                              }}
+                                  for (var row in results) {
+                                    passw = row[1];
+                                    id = row[2];
+                                    nom = row[3];
+
+                                  }
+                                  //final algorithm = PBKDF2();
+                                  // String hash = Password.hash(password.text ,algorithm);
+                                  //  if (hash==passw)
+                                  //  print("the password in data base is "+passw);
+                                  //  print("the same password in input  is "+hash);
+
+
+                                  if(Password.verify(password.text, passw)    )                              {
+                                    print("infos" +id.toString()+"/"+nom);
+                                    await session.set("id", id.toString());
+                                    await session.set("nom", nom);
+
+
+
+                                    print('avant');
+                                    SharedPreferences   prefs = await SharedPreferences.getInstance();
+                                    prefs?.setBool("isLoggedIn", true);
+                                    prefs.commit();
+                                    var status = prefs.getBool('isLoggedIn') ?? false;
+
+                                    print('apres '+status.toString());
+                                    //setState(() {
+                                    //
+                                    //  });
+                                    setState(() {
+                                      msg = "";
+
+                                    });
+                                    var vid;
+                                    var type_id;
+                                    var type_libelle;
+
+                                    var result1 = await conn.query(
+                                        'select id,type_id from vehicules where chauffeur_id=?', [ id ]);
+
+                                    for (var row in result1) {
+                                      vid=row[0];
+                                      type_id=row[1];
+                                      print("vid :"+vid.toString());
+                                    }
+                                    if(vid==null)
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => AjouterVehicule()),
+                                      );
+                                    else {
+
+                                      print("type :"+type_id.toString());
+                                      print("id :"+type_id.toString());
+
+                                      var result2 = await conn.query("select libelle from types where id=?",[type_id]);
+
+                                      for (var row in result2) {
+                                        type_libelle=row[0];
+                                        print("type :"+type_libelle);
+                                      }
+                                      await session.set("categorie",type_libelle);
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => Menu()),
+                                      );
+                                    }
+                                    //Navigator.pushReplacementNamed(context, '/ajouterVéhicule');
+                                  } else {
+                                    setState(() {
+                                      msg = "Mot de passe erroné";
+                                    });
+                                  }
+                                }}
                             });
                             print("heey" + msg);
-
                           },
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(16.0),
@@ -251,36 +296,36 @@ class _LoginScreenState extends State<LoginScreen> {
                             height: SizeConfig.safeBlockVertical * 9,
                             width: double.infinity,
                             child: Row(
-                            children: <Widget>[
-                              Container(
+                              children: <Widget>[
+                                Container(
 
-                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 10),
+                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 10),
 
-                                padding: EdgeInsets.only(left:SizeConfig.safeBlockHorizontal * 3,right: SizeConfig.safeBlockHorizontal * 7),
-                                child: Text("se connecter", style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold,
-
-
-                                )),
-                              ),
-                              SizedBox(width: 0),
-                              Container(
-                                //width: 50.0,
-                                //height: 50.0,
-                                  margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 5),
-                                  padding: const EdgeInsets.all(2.0),//I used some padding without fixed width and height
-                                  decoration: new BoxDecoration(
-                                    shape: BoxShape.circle,// You can use like this way or like the below line
-                                    //borderRadius: new BorderRadius.circular(30.0),
+                                  padding: EdgeInsets.only(left:SizeConfig.safeBlockHorizontal * 3,right: SizeConfig.safeBlockHorizontal * 7),
+                                  child: Text("se connecter", style: TextStyle(
                                     color: Colors.white,
-                                  ),
-                                  child:Icon(Icons.arrow_forward, color: Color(0xffe6b301),size: 28)
-                              ),//............
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
 
-                            ],
-                        ),
+
+                                  )),
+                                ),
+                                SizedBox(width: 0),
+                                Container(
+                                  //width: 50.0,
+                                  //height: 50.0,
+                                    margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 5),
+                                    padding: const EdgeInsets.all(2.0),//I used some padding without fixed width and height
+                                    decoration: new BoxDecoration(
+                                      shape: BoxShape.circle,// You can use like this way or like the below line
+                                      //borderRadius: new BorderRadius.circular(30.0),
+                                      color: Colors.white,
+                                    ),
+                                    child:Icon(Icons.arrow_forward, color: Color(0xffe6b301),size: 28)
+                                ),//............
+
+                              ],
+                            ),
                           ),),
                       ],
                     ),

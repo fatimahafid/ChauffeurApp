@@ -7,14 +7,17 @@ class CustomTextField extends StatelessWidget {
   final String label;
   final TextEditingController controller;
   final bool isPassword;
+  final bool enabled;
 
   const CustomTextField(
-      {Key key, this.label, this.icon, this.controller, this.isPassword = false})
+      {Key key, this.label, this.icon, this.controller, this.isPassword = false,this.enabled})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+
     return TextField(
+      enabled: enabled,
           controller: controller,
       style: TextStyle(color: Color(0xFFF234253), fontWeight: FontWeight.bold),
       obscureText: isPassword,

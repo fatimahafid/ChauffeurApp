@@ -29,10 +29,15 @@ class AjouterVehicule extends StatefulWidget {
 class _AjouterVehiculeState extends State<AjouterVehicule> {
   var session = FlutterSession();
   File _image;
+  var is_taxi=false;
   String msg = '';
   final immatr = TextEditingController();
   final agrem = TextEditingController();
   final numtaxi = TextEditingController();
+  var _isimageEmpty=true;
+  var imageColor=Colors.white;
+  var titre='Ajouter une image';
+  var textcolor= Color(0xFFF032f41);
 
   List<String> marques=getMarques() ;
   List<String> categories=getGategories() ;
@@ -96,17 +101,56 @@ class _AjouterVehiculeState extends State<AjouterVehicule> {
     return categoris;
   }
 
+   istaxi(type){
+
+     if(type=='Grand taxi' || type=='Petit taxi')
+      setState(() {
+        is_taxi=true;
+      });
+     else
+       setState(() {
+         is_taxi=false;
+       });
+     print('enabled should be :'+is_taxi.toString());
+
+  }
+  isimageEmpty(){
+     if(_image==null){
+      setState(() {
+       _isimageEmpty=true;
+        imageColor=Colors.white;
+        titre='Ajouter une image';
+        textcolor= Color(0xFFF032f41);
+
+      });
+      }
+     else
+       setState(() {
+         _isimageEmpty=false;
+         imageColor=Color(0xFFF032f41);
+         titre='image ajoutée';
+         textcolor=Colors.white;
+
+       });
+     print('in image method'+titre.toString());
+
+
+  }
   _ajout(numtaxi, numAgrement, numImmatriculation, image, marque,type,chauffeur_id,BuildContext context) async {
     // Open a connection (testdb should already exist)
     print('in insert method');
     int marque_id;
     int type_id;
-    if(immatr.text=="" )
+    if((is_taxi && (agrem.text=="" || numtaxi=="") )|| immatr.text==""  || _isimageEmpty==true)
     {
+
       setState(() {
         msg = "Remplir les champs";
       });
     } else {
+      setState(() {
+        msg='';
+      });
 
       getConnection().then((conn) async {
       var result0 = await conn.query("select id from marques where libelle=?",[marque]);
@@ -123,6 +167,14 @@ class _AjouterVehiculeState extends State<AjouterVehicule> {
       }
       var now = new DateTime.now();
 
+      if(!is_taxi)
+        {
+          setState(() {
+            numtaxi=null;
+            numAgrement=null;
+          });
+
+        }
       var result = await conn.query(
 
           'insert into vehicules (numTaxi, numAgrement, numImmatriculation,deleted_at,image, marque_id, type_id,chauffeur_id,created_at, updated_at) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
@@ -146,12 +198,6 @@ class _AjouterVehiculeState extends State<AjouterVehicule> {
       );
     }
 
-  //  if(_character==SingingCharacter.femme){
-   //   vsexe=1;
-    //}else if(_character==SingingCharacter.homme){
-    //  vsexe=2;
-  //  }
-    // Insert some data
 
   }
 
@@ -176,6 +222,8 @@ class _AjouterVehiculeState extends State<AjouterVehicule> {
     setState(() {
       _image = compressImg;
     });
+    isimageEmpty();
+
   }
 
   Future upload(File imageFile) async{
@@ -213,11 +261,6 @@ class _AjouterVehiculeState extends State<AjouterVehicule> {
    // getMarques();
   //  getGategories();
     return Scaffold(
-
-
-
-
-
 
 
       body: Stack(
@@ -300,6 +343,7 @@ class _AjouterVehiculeState extends State<AjouterVehicule> {
                               onChanged: (String newval){
                                 setState((){
                                   dropdownvalue = newval;
+                                  istaxi(dropdownvalue);
                                   print("select:"+dropdownvalue);
 
                                 });
@@ -369,20 +413,6 @@ class _AjouterVehiculeState extends State<AjouterVehicule> {
                         Container(
                           height: SizeConfig.safeBlockHorizontal * 15,
                           child: CustomTextField(
-                            controller:agrem,
-
-                            label: "Num Agrément",
-                            icon: Icon(
-                              Icons.credit_card,
-                              size: 27,
-                              color: Color(0xFFF032f41),
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: SizeConfig.safeBlockHorizontal * 4),
-                        Container(
-                          height: SizeConfig.safeBlockHorizontal * 15,
-                          child: CustomTextField(
                             controller:immatr,
 
                             label: "Num Immatriculation",
@@ -391,8 +421,27 @@ class _AjouterVehiculeState extends State<AjouterVehicule> {
                               size: 27,
                               color: Color(0xFFF032f41),
                             ),
+
                           ),
                         ),
+
+                        SizedBox(height: SizeConfig.safeBlockHorizontal * 4),
+                        Container(
+                          height: SizeConfig.safeBlockHorizontal * 15,
+                          child: CustomTextField(
+                              controller:agrem,
+
+                              label: "Num Agrément",
+                              icon: Icon(
+                                Icons.credit_card,
+                                size: 27,
+                                color: Color(0xFFF032f41),
+                              ),
+                              enabled:is_taxi
+
+                          ),
+                        ),
+
                         SizedBox(height: SizeConfig.safeBlockHorizontal * 4),
                         Container(
                           height: SizeConfig.safeBlockHorizontal * 15,
@@ -406,33 +455,39 @@ class _AjouterVehiculeState extends State<AjouterVehicule> {
                               size: 27,
                               color: Color(0xFFF032f41),
                             ),
+                              enabled:is_taxi
+
                           ),
+
                         ),
+
                         SizedBox(height: SizeConfig.safeBlockHorizontal * 4),
+
                         Container(
                           height: SizeConfig.safeBlockHorizontal * 15,
 
 
                           child:RaisedButton(
-                            color: Colors.white,
+                            color: imageColor,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(16.0),
                                 side: BorderSide(color: Color(0xFFF032f41),width: 0.3)),
                             child: Row(
                               children: <Widget>[
-                                Text("Ajouter une image", style: TextStyle(
-                                  color: Color(0xFFF032f41),
+                                Text(titre, style: TextStyle(
+                                  color: textcolor,
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
 
 
                                 )),
                                 SizedBox(width: SizeConfig.safeBlockHorizontal * 30),
-                                Icon(Icons.image,size: 35,),
+                                Icon(Icons.image,size: 35,color:textcolor),
                               ],
                             ),
-                            onPressed: getImageGallery,
-
+                            onPressed : (){
+                              getImageGallery();
+                          }
                           ),
 
                         ),
