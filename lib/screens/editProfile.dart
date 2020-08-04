@@ -8,6 +8,9 @@ import 'package:flutter_session/flutter_session.dart';
 import 'package:flutter/src/widgets/basic.dart' as row;
 import 'package:mysql1/mysql1.dart';
 import 'package:password/password.dart';
+import 'package:crypto/crypto.dart' as crypto;
+import 'dart:convert';
+import 'package:convert/convert.dart';
 
 class EditProfil extends StatefulWidget {
   @override
@@ -250,8 +253,7 @@ class _EditProfilState extends State<EditProfil> {
                             child: RaisedButton(
                               onPressed: () {
                                 print('hdhsfs');
-                                final algorithm = PBKDF2();
-                                final hash = Password.hash(mdpController.text, algorithm);
+                               final hash=generateMd5(mdpController.text);
                                 _updateProfile(loginController.text, cinController.text, nomController.text,
                                     prenomController.text, telController.text,hash);
                                 Navigator.push(
@@ -355,5 +357,11 @@ class _EditProfilState extends State<EditProfil> {
     print(userId);
     // Finally, close the connection
     await conn.close();
+  }
+  generateMd5(String data) {
+    var content = new Utf8Encoder().convert(data);
+    var md5 = crypto.md5;
+    var digest = md5.convert(content);
+    return hex.encode(digest.bytes);
   }
 }

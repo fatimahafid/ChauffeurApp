@@ -65,7 +65,11 @@ class _FincourseState extends State<Fincourse> {
           'delete from ${tablename} where id=?',
           [courseId
           ]);
-
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => Menu()),
+      );
     });
 
   }

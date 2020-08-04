@@ -36,7 +36,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    navigateUser();
   }
   Future<MySqlConnection> getConnection() async {
     final conn = await MySqlConnection.connect(ConnectionSettings(
@@ -44,42 +43,6 @@ class _HomeScreenState extends State<HomeScreen> {
     return conn;
   }
 
-  updatepassword(userid){
-    getConnection().then((conn) async {
-      var result = await conn.query(
-
-          'update chauffeurs set password=? where id=?',
-          [
-
-            password.toString(),
-            userid,
-
-          ]);
-      conn.close();
-  });
-        }
-  void navigateUser() async{
-
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      status = prefs.getBool('isLoggedIn') ?? false;
-    });
-
-    print('status'+status.toString());
-    if (status==true) {
-     // Navigator.pushNamed(context, '/menu');
-    /*  Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => Menu()),
-      );*/
-      //home=Menu();
-    }
-
-
-
-
-  }
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);

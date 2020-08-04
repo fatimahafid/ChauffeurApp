@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:login_dash_animation/components/CustomButtonAnimation.dart';
 import 'package:login_dash_animation/components/customTextfield.dart';
+import 'package:login_dash_animation/screens/Menu.dart';
 import 'package:login_dash_animation/screens/ajouterVehicule.dart';
 import 'package:login_dash_animation/SizeConfig.dart';
 import 'package:flutter/src/widgets/basic.dart' as row ;
 import 'package:mysql1/mysql1.dart' ;
 import 'package:password/password.dart';
+import 'package:crypto/crypto.dart' as crypto;
+import 'dart:convert';
+import 'package:convert/convert.dart';
+
 
 class InscriptionScreen extends StatefulWidget {
   @override
@@ -232,9 +237,11 @@ class _InscriptionScreenState extends State<InscriptionScreen> {
                               onPressed: () {
                                 print('hdhsfs');
                                 print(vlogin.toString());
-                                final algorithm = PBKDF2();
+                               /* final algorithm = PBKDF2();
                                 final hash = Password.hash(
-                                    vmdp.text, algorithm);
+                                    vmdp.text, algorithm);*/
+
+                               var hash= generateMd5(vmdp.text);
                                 print("the password is " + hash);
                                 if (vlogin.text == "" || vmdp.text == ""|| vcin.text == "" ||
                                     vprenom.text == "" || vtel.text == "") {
@@ -256,7 +263,7 @@ class _InscriptionScreenState extends State<InscriptionScreen> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => AjouterVehicule()),
+                                        builder: (context) => Menu()),
                                   );
                                 }
 
@@ -362,6 +369,13 @@ class _InscriptionScreenState extends State<InscriptionScreen> {
     await conn.close();
 
 }
+
+  generateMd5(String data) {
+    var content = new Utf8Encoder().convert(data);
+    var md5 = crypto.md5;
+    var digest = md5.convert(content);
+    return hex.encode(digest.bytes);
+  }
 }
 
 

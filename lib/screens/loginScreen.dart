@@ -9,6 +9,10 @@ import 'package:mysql1/mysql1.dart' hide Row;
 import 'package:password/password.dart';
 import 'package:flutter_session/flutter_session.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:crypto/crypto.dart' as crypto;
+import 'package:crypto/crypto.dart' as crypto;
+import 'dart:convert';
+import 'package:convert/convert.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -28,7 +32,12 @@ class _LoginScreenState extends State<LoginScreen> {
     return conn;
   }
 
-
+  generateMd5(String data) {
+    var content = new Utf8Encoder().convert(data);
+    var md5 = crypto.md5;
+    var digest = md5.convert(content);
+    return hex.encode(digest.bytes);
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -194,9 +203,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                   //  if (hash==passw)
                                   //  print("the password in data base is "+passw);
                                   //  print("the same password in input  is "+hash);
+                                  var input_password=generateMd5(password.text);
 
+                                 // if(Password.verify(password.text, passw)    )                              {
+                                  if(passw==input_password )                              {
 
-                                  if(Password.verify(password.text, passw)    )                              {
                                     print("infos" +id.toString()+"/"+nom);
                                     await session.set("id", id.toString());
                                     await session.set("nom", nom);
@@ -206,9 +217,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                     await session.set("login", log);
                                     await session.set("password", passw);
                                     await session.set("sexe", sexe);
+                                    if(numTaxi==null)
+                                      numTaxi='';
                                     await session.set("numTaxi", numTaxi);
-                                    await session.set(
-                                        "numAgrement", numAgrement);
+                                    if(numAgrement==null)
+                                      numAgrement='';
+                                    await session.set( "numAgrement", numAgrement);
                                     await session.set("numImmatriculation",
                                         numImmatriculation);
                                     // await session.set("image", image);

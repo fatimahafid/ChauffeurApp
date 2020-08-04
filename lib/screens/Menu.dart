@@ -43,13 +43,14 @@ class _MenuState extends State<Menu> {
   var session = FlutterSession();
   var touriste;
   var isStopped=false;
-  String username='farah';
+  String username='';
 
   @override
   void initState() {
     super.initState();
     getTablebycategorie();
     getvehicule();
+    getuseername();
     final settingsAndroid = AndroidInitializationSettings('icone');
     final settingsIOS = IOSInitializationSettings(
         onDidReceiveLocalNotification: (id, title, body, payload) =>
@@ -65,7 +66,14 @@ class _MenuState extends State<Menu> {
     MaterialPageRoute(builder: (context) => Menu()),
   );
 
-  checkcaraffected(){
+
+  getuseername() async{
+   var  prenom=await FlutterSession().get("prenom");
+    setState(() {
+      username=prenom;
+    });
+  }
+    checkcaraffected(){
 
     getConnection().then((conn) async {
       var result = await conn.query(
@@ -83,10 +91,14 @@ class _MenuState extends State<Menu> {
       if(touriste==null)
         setState(() {
           isaffected =false;
-        });
-      else
-        isaffected =true;
+         // isStopped=false;
 
+        });
+      else {
+        isaffected = true;
+       // isStopped=false;
+
+      }
 
       if(isaffected==true) {
         setState(() {
@@ -178,6 +190,7 @@ else
   }
 
   _Addtopile() async {
+    isStopped=false;
     getTablebycategorie();
     getvehicule();
     print('this is the car id'+carId.toString());
@@ -275,17 +288,12 @@ else
 
           ),
           Container(
-            padding: EdgeInsets.only(left: SizeConfig.safeBlockVertical * 2, top: SizeConfig.safeBlockVertical *7, right: SizeConfig.safeBlockHorizontal *4),
+            padding: EdgeInsets.only(left: SizeConfig.safeBlockVertical * 40, top: SizeConfig.safeBlockVertical *7, right: SizeConfig.safeBlockHorizontal *4),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Icon(
-                  Icons.arrow_back,
-                  color: Colors.white,
-                  size: 33.0,
-                  semanticLabel: '',
-                ),
+
                 Row(
                   children: <Widget>[
                     Text(

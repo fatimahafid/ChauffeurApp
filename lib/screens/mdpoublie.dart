@@ -12,6 +12,9 @@ import 'package:flutter_session/flutter_session.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'dart:math' as Math;
+import 'package:crypto/crypto.dart' as crypto;
+import 'dart:convert';
+import 'package:convert/convert.dart';
 
 
 
@@ -28,12 +31,18 @@ class _mdpoublieState extends State<mdpoublie> {
   var password ;
   final login = TextEditingController();
   int rand;
-  final algorithm = PBKDF2();
-
+  generateMd5(String data) {
+    var content = new Utf8Encoder().convert(data);
+    var md5 = crypto.md5;
+    var digest = md5.convert(content);
+    return hex.encode(digest.bytes);
+  }
   updatepassword(){
     rand= new Math.Random().nextInt(100000);
 
-     String hash = Password.hash(rand.toString() ,algorithm);
+
+    var hash= generateMd5(rand.toString());
+
     setState(() {
       password=hash;
     });
