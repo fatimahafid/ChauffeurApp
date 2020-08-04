@@ -110,7 +110,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   Container(
                     margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 10, left: SizeConfig.safeBlockHorizontal * 0),
 
-                    child: FadeAnimation(2.4,Text("Vous etes un Chauffeur  ?", style: TextStyle(
+                    child: FadeAnimation(2.4,Text("Vous êtes un Chauffeur  ?", style: TextStyle(
                     color: Colors.white,
                     fontSize: 22,
                     letterSpacing: 2,

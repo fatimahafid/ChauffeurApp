@@ -10,9 +10,6 @@ import 'package:password/password.dart';
 import 'package:flutter_session/flutter_session.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
-
-
 class LoginScreen extends StatefulWidget {
   @override
   _LoginScreenState createState() => _LoginScreenState();
@@ -25,57 +22,12 @@ class _LoginScreenState extends State<LoginScreen> {
   final login = TextEditingController();
   final password = TextEditingController();
 
-
-
   Future<MySqlConnection> getConnection() async {
     final conn = await MySqlConnection.connect(ConnectionSettings(
         host: '10.0.2.2', port: 3306, user: 'root', db: 'taxiapp'));
     return conn;
   }
 
-  _login() async {
-    print("heey1");
-
-    String login = "farah";
-    String passw = "eee";
-    getConnection().then((conn) async {
-      var id;
-      var nom='';
-      var password = '';
-      var results = await conn.query(
-          'select login, password,id,nom from chauffeurs where login = ?', [login]);
-
-      if (results.isEmpty) {
-        setState(() {
-          msg = "Authetificateur erroné";
-        });
-      } else {
-        for (var row in results) {
-          password = row[1];
-          id=row[2];
-          nom=row[3];
-        }
-
-        if (password == passw) {
-          await session.set("id", id);
-          await session.set("nom", nom);
-          setState(() {
-            msg = "great";
-          });
-          //Navigator.pushReplacementNamed(context, '/ajouterVéhicule');
-        } else {
-          setState(() {
-            msg = "Mot de passe erroné";
-          });
-        }
-      }
-    });
-    print("heey" + msg);
-  }
-
-  _test() {
-    print("im the testing function");
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -129,7 +81,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               left: SizeConfig.safeBlockHorizontal * 5,
                               right: SizeConfig.safeBlockHorizontal * 5,
                               top: SizeConfig.safeBlockVertical * 0),
-                          child: Text("Authentifier-vous ",
+                          child: Text("Authentifiez-vous ! ",
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 color: Color(0xFFF032f41),
@@ -155,8 +107,6 @@ class _LoginScreenState extends State<LoginScreen> {
                           height: SizeConfig.safeBlockVertical * 10,
                           child: CustomTextField(
                             controller:password,
-
-
                             label: "Mot de passe",
                             isPassword: true,
                             icon: Icon(
@@ -184,6 +134,17 @@ class _LoginScreenState extends State<LoginScreen> {
                             print("heey1");
                             var id;
                             var nom='';
+                            var prenom = '';
+                            var cin = '';
+                            var numTel = '';
+                            var sexe = '';
+                            var vehic_id;
+                            var numTaxi = '';
+                            var numImmatriculation = '';
+                            var numAgrement = '';
+                            var image = '';
+                            var marque_id;
+                            var type_id;
 
                             getConnection().then((conn) async {
                               var passw = '';
@@ -195,10 +156,13 @@ class _LoginScreenState extends State<LoginScreen> {
                               }
                               else{
                                 log=login.text.replaceAll(new RegExp(r"\s+"), "");
-                                var results = await conn.query('select login, password,id,nom from chauffeurs where login = ?',
-                                    [log]);
+                                var results = await conn.query(
+                                    'select login, password,id,nom,prenom,cin,numTel,sexe from chauffeurs where login = ?',
+                                    [login.text]);
 
-
+                                var resultsVehic = await conn.query(
+                                    'select numTaxi, numAgrement,numImmatriculation,image,marque_id,type_id,chauffeur_id,id from vehicules where chauffeur_id in (select id from chauffeurs where login= ?)',
+                                    [login.text]);
 
 
                                 if (results.isEmpty) {
@@ -207,10 +171,23 @@ class _LoginScreenState extends State<LoginScreen> {
                                   });
                                 } else {
                                   for (var row in results) {
+                                    log = row[0];
                                     passw = row[1];
                                     id = row[2];
                                     nom = row[3];
-
+                                    prenom = row[4];
+                                    cin = row[5];
+                                    numTel = row[6];
+                                    sexe = row[7];
+                                  }
+                                  for (var rowvehic in resultsVehic) {
+                                    numTaxi = rowvehic[0];
+                                    numAgrement = rowvehic[1];
+                                    numImmatriculation = rowvehic[2];
+                                    image = rowvehic[3];
+                                    marque_id = rowvehic[4];
+                                    type_id = rowvehic[5];
+                                    vehic_id = rowvehic[6];
                                   }
                                   //final algorithm = PBKDF2();
                                   // String hash = Password.hash(password.text ,algorithm);
@@ -223,6 +200,23 @@ class _LoginScreenState extends State<LoginScreen> {
                                     print("infos" +id.toString()+"/"+nom);
                                     await session.set("id", id.toString());
                                     await session.set("nom", nom);
+                                    await session.set("prenom", prenom);
+                                    await session.set("cin", cin);
+                                    await session.set("numTel", numTel);
+                                    await session.set("login", log);
+                                    await session.set("password", passw);
+                                    await session.set("sexe", sexe);
+                                    await session.set("numTaxi", numTaxi);
+                                    await session.set(
+                                        "numAgrement", numAgrement);
+                                    await session.set("numImmatriculation",
+                                        numImmatriculation);
+                                    // await session.set("image", image);
+                                    await session.set(
+                                        "marque_id", marque_id.toString());
+                                    await session.set(
+                                        "type_id", type_id.toString());
+
 
 
 
@@ -241,8 +235,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
                                     });
                                     var vid;
-                                    var type_id;
+
                                     var type_libelle;
+
 
                                     var result1 = await conn.query(
                                         'select id,type_id from vehicules where chauffeur_id=?', [ id ]);
@@ -252,6 +247,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                       type_id=row[1];
                                       print("vid :"+vid.toString());
                                     }
+                                    await session.set(
+                                        "type_id", type_id.toString());
                                     if(vid==null)
                                       Navigator.push(
                                         context,
@@ -267,9 +264,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
                                       for (var row in result2) {
                                         type_libelle=row[0];
+
                                         print("type :"+type_libelle);
                                       }
                                       await session.set("categorie",type_libelle);
+
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
