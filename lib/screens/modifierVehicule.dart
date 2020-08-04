@@ -30,7 +30,10 @@ class _ModifierVehiculeState extends State<ModifierVehicule> {
 
   List<String> marques = getMarques();
   List<String> categories = getGategories();
-
+  var _isimageEmpty=true;
+  var imageColor=Colors.white;
+  var titre='Ajouter une image';
+  var textcolor= Color(0xFFF032f41);
 
   int userId;
   int userVehicId;
@@ -156,7 +159,28 @@ class _ModifierVehiculeState extends State<ModifierVehicule> {
     });
     return categories;
   }
+  isimageEmpty(){
+    if(_image==null){
+      setState(() {
+        _isimageEmpty=true;
+        imageColor=Colors.white;
+        titre='Modifier l\'image';
+        textcolor= Color(0xFFF032f41);
 
+      });
+    }
+    else
+      setState(() {
+        _isimageEmpty=false;
+        imageColor=Color(0xFFF032f41);
+        titre='image modifiée';
+        textcolor=Colors.white;
+
+      });
+    print('in image method'+titre.toString());
+
+
+  }
   _update(numtaxi, numAgrement, numImmatriculation, marque, type,
       vehic_id) async {
     // Open a connection (testdb should already exist)
@@ -188,14 +212,17 @@ class _ModifierVehiculeState extends State<ModifierVehicule> {
       numAgrement +
       '", numImmatriculation="' +
               numImmatriculation +
-
           '",marque_id="' +
               marque_id.toString() +
           '",type_id="' +
               type_id.toString() +
           '" where chauffeur_id=' +
               userId.toString());
-
+      await FlutterSession().set("numAgrement", numAgrement);
+      await FlutterSession().set("numTaxi",numtaxi);
+      await FlutterSession().set("numImmatriculation",numImmatriculation);
+      await FlutterSession().set("marque_id",marque_id);
+      await FlutterSession().set("type_id",type_id);
       print('Inserted row id=${result.insertId}');
 
       // Finally, close the connection

@@ -81,7 +81,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               left: SizeConfig.safeBlockHorizontal * 5,
                               right: SizeConfig.safeBlockHorizontal * 5,
                               top: SizeConfig.safeBlockVertical * 0),
-                          child: Text("Authentifier-vous ",
+                          child: Text("Authentifiez-vous ! ",
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 color: Color(0xFFF032f41),

@@ -261,8 +261,6 @@ class _AjouterVehiculeState extends State<AjouterVehicule> {
    // getMarques();
   //  getGategories();
     return Scaffold(
-
-
       body: Stack(
         fit: StackFit.expand,
         children: <Widget>[

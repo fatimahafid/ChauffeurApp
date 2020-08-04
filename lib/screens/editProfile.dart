@@ -346,9 +346,13 @@ class _EditProfilState extends State<EditProfil> {
         vmdp +
         '" where id=' +
         userId.toString());
-
+    await FlutterSession().set("nom",vnom);
+    await FlutterSession().set("prenom",vprenom);
+    await FlutterSession().set("cin",vcin);
+    await FlutterSession().set("numTel",vtel);
+    await FlutterSession().set("login",vlogin);
+    await FlutterSession().set("password",vmdp);
     print(userId);
-
     // Finally, close the connection
     await conn.close();
   }
