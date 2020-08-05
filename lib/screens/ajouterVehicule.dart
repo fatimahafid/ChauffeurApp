@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:login_dash_animation/components/buttonLoginAnimation.dart';
 import 'package:login_dash_animation/components/customTextfield.dart';
 import 'package:login_dash_animation/screens/Menu.dart';
@@ -10,7 +11,7 @@ import 'package:path/path.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'package:async/async.dart';
-
+import 'package:flutter/src/widgets/basic.dart' as row ;
 import 'package:http/http.dart' as http;
 
 import 'package:path_provider/path_provider.dart';
@@ -465,13 +466,18 @@ class _AjouterVehiculeState extends State<AjouterVehicule> {
                           height: SizeConfig.safeBlockHorizontal * 15,
 
 
+
+
                           child:RaisedButton(
                             color: imageColor,
+                              padding: const EdgeInsets.only(right:0,left:15),
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(16.0),
                                 side: BorderSide(color: Color(0xFFF032f41),width: 0.3)),
-                            child: Row(
+                            child: row.Row(
+
                               children: <Widget>[
+
                                 Text(titre, style: TextStyle(
                                   color: textcolor,
                                   fontSize: 16,
@@ -479,8 +485,9 @@ class _AjouterVehiculeState extends State<AjouterVehicule> {
 
 
                                 )),
-                                SizedBox(width: SizeConfig.safeBlockHorizontal * 30),
-                                Icon(Icons.image,size: 35,color:textcolor),
+                                SizedBox(width: SizeConfig.safeBlockHorizontal * 20),
+                                Icon(Icons.image,size: 35,color:textcolor,),
+
                               ],
                             ),
                             onPressed : (){
@@ -526,7 +533,7 @@ class _AjouterVehiculeState extends State<AjouterVehicule> {
                                   Container(
 
 
-                                    padding: EdgeInsets.only(left:SizeConfig.safeBlockHorizontal * 28),
+                                    padding: EdgeInsets.only(left:SizeConfig.safeBlockHorizontal * 18),
                                      child:Center(
                                        child: Text("Ajouter", style: TextStyle(
 

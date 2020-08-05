@@ -13,6 +13,7 @@ import 'package:crypto/crypto.dart' as crypto;
 import 'package:crypto/crypto.dart' as crypto;
 import 'dart:convert';
 import 'package:convert/convert.dart';
+import 'package:flutter/src/widgets/basic.dart' as row ;
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -308,17 +309,25 @@ class _LoginScreenState extends State<LoginScreen> {
                           child: Container(
                             height: SizeConfig.safeBlockVertical * 9,
                             width: double.infinity,
-                            child: Row(
+                            child: row.Row(
                               children: <Widget>[
                                 Container(
 
-                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 10),
+                                  margin: EdgeInsets.only(
+                                      left: SizeConfig.safeBlockHorizontal *
+                                          0),
 
-                                  padding: EdgeInsets.only(left:SizeConfig.safeBlockHorizontal * 3,right: SizeConfig.safeBlockHorizontal * 7),
-                                  child: Text("se connecter", style: TextStyle(
+                                  padding: EdgeInsets.only(
+                                      left: SizeConfig.safeBlockHorizontal *
+                                          4,
+                                      right: SizeConfig
+                                          .safeBlockHorizontal * 3),
+                                  child: Text(
+                                      "Se Connecter", style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 24,
                                     fontWeight: FontWeight.bold,
+
 
 
                                   )),
@@ -327,19 +336,26 @@ class _LoginScreenState extends State<LoginScreen> {
                                 Container(
                                   //width: 50.0,
                                   //height: 50.0,
-                                    margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 5),
-                                    padding: const EdgeInsets.all(2.0),//I used some padding without fixed width and height
+                                    margin: EdgeInsets.only(
+                                        right: SizeConfig
+                                            .safeBlockHorizontal * 5),
+                                    padding: const EdgeInsets.all(2.0),
+                                    //I used some padding without fixed width and height
                                     decoration: new BoxDecoration(
-                                      shape: BoxShape.circle,// You can use like this way or like the below line
+                                      shape: BoxShape.circle,
+                                      // You can use like this way or like the below line
                                       //borderRadius: new BorderRadius.circular(30.0),
                                       color: Colors.white,
                                     ),
-                                    child:Icon(Icons.arrow_forward, color: Color(0xffe6b301),size: 28)
-                                ),//............
+                                    child: Icon(Icons.arrow_forward,
+                                        color: Color(0xffe6b301), size: 28)
+                                ), //............
 
                               ],
                             ),
-                          ),),
+
+                          ),
+                        ),
                       ],
                     ),
                   )
