@@ -15,6 +15,7 @@ import 'dart:math' as Math;
 import 'package:crypto/crypto.dart' as crypto;
 import 'dart:convert';
 import 'package:convert/convert.dart';
+import 'package:http/http.dart' as http;
 
 
 
@@ -64,10 +65,45 @@ class _mdpoublieState extends State<mdpoublie> {
 
   Future<MySqlConnection> getConnection() async {
     final conn = await MySqlConnection.connect(ConnectionSettings(
-        host: '10.0.2.2', port: 3306, user: 'root', db: 'taxiapp'));
+    //    host: 'shuttle.myguide.ma', port: 3306, user: 'myguidem', password: 'aqJ6gVU;6O79-y',db: 'myguidem_taxiapp'));
+    host: '10.0.2.2', port: 3306, user: 'root', password: '',db: 'taxiapp'));
+
     return conn;
   }
 
+  test() async{
+    print('nnn');
+    //var uri = Uri.parse("http://10.0.2.2/taxiapp/RN_api.php");
+    var uri = 'http://10.0.2.2/taxiapp/RN_api.php';
+    var requete="update chauffeurs set login='test' where id=1";
+
+    var data = {'requete': requete};
+
+    // Starting Web API Call.
+    var response = await http.post(uri, body: json.encode(data));
+
+    // Getting Server response into variable.
+    var message = jsonDecode(response.body);
+
+    // If the Response Message is Matched.
+    if(message == 'Login Matched')
+    {print("bbbbbbbbbb");}
+    else print("kkkkkk");
+
+   // var request = new http.MultipartRequest(uri,"POST");
+
+
+
+   // request.fields['requete'] = requete;
+
+    //var response = await request.send();
+/*
+    if(response.statusCode==200){
+      print("done");
+    }else{
+      print("not done");
+    }*/
+  }
 
 
   @override
@@ -149,7 +185,8 @@ class _mdpoublieState extends State<mdpoublie> {
                         RaisedButton(
                           onPressed: () {
                             updatepassword();
-                            return Alert(
+                            //test();
+                        /* return Alert(
                               context: context,
                               type: AlertType.success,
                               title: "Succès",
@@ -173,7 +210,7 @@ class _mdpoublieState extends State<mdpoublie> {
                                   width: 120,
                                 )
                               ],
-                            ).show();
+                            ).show();*/
 
                           },
                           shape: RoundedRectangleBorder(
