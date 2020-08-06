@@ -1,8 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:login_dash_animation/components/CustomButtonAnimation.dart';
 import 'package:login_dash_animation/components/customTextfield.dart';
 import 'package:login_dash_animation/screens/Menu.dart';
-import 'package:login_dash_animation/screens/ajouterVehicule.dart';
+import 'package:login_dash_animation/screens/loginScreen.dart';
 import 'package:login_dash_animation/SizeConfig.dart';
 import 'package:flutter/src/widgets/basic.dart' as row ;
 import 'package:mysql1/mysql1.dart' ;
@@ -29,6 +31,8 @@ class _InscriptionScreenState extends State<InscriptionScreen> {
   final vtel = TextEditingController();
   int vsexe = 0;
   String msg = '';
+  bool exist=false;
+
 
 
   @override
@@ -235,11 +239,11 @@ class _InscriptionScreenState extends State<InscriptionScreen> {
                             height: SizeConfig.safeBlockHorizontal * 13,
                             child: RaisedButton(
                               onPressed: () {
+
+
                                 print('hdhsfs');
-                                print(vlogin.toString());
-                               /* final algorithm = PBKDF2();
-                                final hash = Password.hash(
-                                    vmdp.text, algorithm);*/
+                                vlogin.toString() =='';
+                                print('ha login'+vlogin.toString());
 
                                var hash= generateMd5(vmdp.text);
                                 print("the password is " + hash);
@@ -248,13 +252,18 @@ class _InscriptionScreenState extends State<InscriptionScreen> {
                                   setState(() {
                                     msg = "Veuillez remplir tous les champs";
                                   });
-                                }else{
+                                }else if (exist==true) {
+                                  setState(() {
+                                    msg = "Login déjâ existant";
+                                  });
+                                }
+                                else{
                                   setState(() {
                                     msg='';
                                   });
                                   _inscription(
-                                      vlogin.text.trim(),
-                                      hash.trim(),
+                                      vlogin.text,
+                                      hash,
                                       vcin.text,
                                       vnom.text,
                                       vprenom.text,
@@ -263,7 +272,7 @@ class _InscriptionScreenState extends State<InscriptionScreen> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => Menu()),
+                                        builder: (context) => LoginScreen()),
                                   );
                                 }
 
@@ -335,40 +344,62 @@ class _InscriptionScreenState extends State<InscriptionScreen> {
       ),
     );
   }
-
-  _inscription(v_login, v_mdp, v_cin, v_nom, v_prenom, v_tel, v_sexe) async {
-    // Open a connection (testdb should already exist)
-    print('here' + v_login);
+  static Future<MySqlConnection> getConnection() async {
     final conn = await MySqlConnection.connect(ConnectionSettings(
         host: '10.0.2.2', port: 3306, user: 'root', db: 'taxiapp'));
-    if (_character == SingingCharacter.femme) {
-      vsexe = 1;
-    } else if (_character == SingingCharacter.homme) {
-      vsexe = 2;
+    return conn;
+  }
+  _inscription(v_login, v_mdp, v_cin, v_nom, v_prenom, v_tel, v_sexe) async {
+    // Open a connection (testdb should already exist)
+    List<String> chauffeurs = List<String>();
+    getConnection().then((conn) async {
+    var results = await conn.query(
+        ' select login from chauffeurs ');
+    for (var row in results) {
+      chauffeurs.add(row[0]);
+      print("chauffeur :" + row[0]);
+
     }
-    // Insert some data
-    var result = await conn.query(
+    for(int i=0; i<chauffeurs.length;i++) {
+      if (vlogin.text == chauffeurs[i]) {
+        exist=true;
+        print('impossiiible' + chauffeurs[i]);
+      }}
+   if(exist==false){
 
-        'insert into chauffeurs (login, password, cin, nom, prenom,numTel,sexe, note, deleted_at, created_at, updated_at) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-        [
-          v_login,
-          v_mdp,
-          v_cin,
-          v_nom,
-          v_prenom,
-          v_tel,
-          v_sexe,
-          null,
-          null,
-          null,
-          null
-        ]);
-    print('Inserted row id=${result.insertId}');
 
-    // Finally, close the connection
+        print('here' + v_login);
+
+        if (_character == SingingCharacter.femme) {
+          vsexe = 1;
+        } else if (_character == SingingCharacter.homme) {
+          vsexe = 2;
+        }
+        var result = await conn.query(
+            'insert into chauffeurs (login, password, cin, nom, prenom,numTel,sexe, note, deleted_at, created_at, updated_at) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+            [
+              v_login,
+              v_mdp,
+              v_cin,
+              v_nom,
+              v_prenom,
+              v_tel,
+              v_sexe,
+              null,
+              null,
+              null,
+              null
+            ]);
+        print('Inserted row id=${result.insertId}');
+
+   }
+
     await conn.close();
+      });
+    }
 
-}
+
+
 
   generateMd5(String data) {
     var content = new Utf8Encoder().convert(data);
