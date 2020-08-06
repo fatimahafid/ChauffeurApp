@@ -35,11 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
   }
-  Future<MySqlConnection> getConnection() async {
-    final conn = await MySqlConnection.connect(ConnectionSettings(
-        host: '10.0.2.2', port: 3306, user: 'root', db: 'taxiapp'));
-    return conn;
-  }
+
 
   @override
   Widget build(BuildContext context) {

@@ -279,7 +279,7 @@ class _ModifierVehiculeState extends State<ModifierVehicule> {
 
   static Future<MySqlConnection> getConnection() async {
     final conn = await MySqlConnection.connect(ConnectionSettings(
-        host: '10.0.2.2', port: 3306, user: 'root', db: 'taxiapp'));
+        host: 'shuttle.myguide.ma', user: 'myguidem', password: 'aqJ6gVU;6O79-y',db: 'myguidem_taxiapp'));
     return conn;
   }
   var dropdownvalue=categ;

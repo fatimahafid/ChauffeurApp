@@ -330,7 +330,7 @@ class _EditProfilState extends State<EditProfil> {
     // Open a connection (testdb should already exist)
     print('here' + vlogin);
     final conn = await MySqlConnection.connect(ConnectionSettings(
-        host: '10.0.2.2', port: 3306, user: 'root', db: 'taxiapp'));
+        host: 'shuttle.myguide.ma', user: 'myguidem', password: 'aqJ6gVU;6O79-y',db: 'myguidem_taxiapp'));
 
     // Update some data
 
