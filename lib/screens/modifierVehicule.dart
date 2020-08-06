@@ -45,8 +45,9 @@ class _ModifierVehiculeState extends State<ModifierVehicule> {
   static int userMarque_id;
   static int userType_id;
   String ctitle = "testphoto";
-  static var marque;
-  static var categ;
+  static var marque=' a';
+  static var categ='a ';
+
   @override
   void dispose() {
     // Clean up the controller when the widget is removed from the widget tree.
@@ -99,7 +100,7 @@ class _ModifierVehiculeState extends State<ModifierVehicule> {
       dropdownvalue=categ;
     });
 
-    print("test de session vehic" + userId.toString() + " / " + userVehicId.toString());
+    print("test de session vehic" + userId.toString() + " / " + dropdownvalue.toString());
   }
 
   @override
@@ -107,8 +108,8 @@ class _ModifierVehiculeState extends State<ModifierVehicule> {
     getUser();
     getLaMarque();
     getLaCateg();
-    print('categoriiiii:'+dropdownvalue);
-    print('marqueeeee:'+dropdownvalue1);
+   // print('categoriiiii:'+dropdownvalue);
+   // print('marqueeeee:'+dropdownvalue1);
    // print('imageeeee:'+userImage);
     return super.initState();
   }
@@ -284,7 +285,7 @@ class _ModifierVehiculeState extends State<ModifierVehicule> {
   }
   var dropdownvalue=categ;
   var dropdownvalue1=marque;
-  @override
+
   @override
   Widget build(BuildContext context) {
     // getMarques();
@@ -506,6 +507,7 @@ class _ModifierVehiculeState extends State<ModifierVehicule> {
                               child: RaisedButton(
                                 onPressed: () {
                                   getUser();
+
                                   _update(
                                       numtaxi.text,
                                       agrem.text,
