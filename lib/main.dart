@@ -30,7 +30,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
 
       debugShowCheckedModeBanner: false,
-      title: 'Surfing',
+      title: 'Rak Navette',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),

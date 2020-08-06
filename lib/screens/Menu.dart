@@ -16,7 +16,6 @@ import 'package:flutter_session/flutter_session.dart';
 import 'package:mysql1/mysql1.dart' hide Row;
 import 'package:location/location.dart';
 import 'dart:async';
-import 'package:login_dash_animation/widgets/local_notification_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 
@@ -122,15 +121,15 @@ class _MenuState extends State<Menu> {
 if(categorie=='Petit taxi')
 
  setState(() {
-      tablename = 'PilePT';
+      tablename = 'pilepT';
     });
 else if(categorie=='Grand taxi')
     setState(() {
-      tablename = 'PileGt';
+      tablename = 'pilegt';
     });
 else
   setState(() {
-    tablename = 'PileVL';
+    tablename = 'pilevl';
   });
     print("test de session"+tablename.toString());
   }
@@ -169,7 +168,7 @@ else
   }
   Future<MySqlConnection> getConnection() async {
     final conn = await MySqlConnection.connect(ConnectionSettings(
-        host: '10.0.2.2', port: 3306, user: 'root', db: 'taxiapp'));
+        host: 'shuttle.myguide.ma', user: 'myguidem', password: 'aqJ6gVU;6O79-y',db: 'myguidem_taxiapp'));
    //if(conn!=null)
     return conn;
 
@@ -266,7 +265,7 @@ else
 
     SizeConfig().init(context);
     location.onLocationChanged.listen((LocationData currentLocation) {
-      updatlocation(currentLocation) ;
+     // updatlocation(currentLocation) ;
     });
     return Scaffold(
       body: Stack(

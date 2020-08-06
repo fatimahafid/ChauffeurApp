@@ -230,7 +230,8 @@ class _AjouterVehiculeState extends State<AjouterVehicule> {
   Future upload(File imageFile) async{
     var stream= new http.ByteStream(DelegatingStream.typed(imageFile.openRead()));
     var length= await imageFile.length();
-    var uri = Uri.parse("http://10.0.2.2/taxiapp/upload.php");
+    //var uri = Uri.parse("http://10.0.2.2/taxiapp/upload.php");
+    var uri = Uri.parse("shuttle.myguide.ma/upload.php");
 
     var request = new http.MultipartRequest("POST", uri);
 
@@ -252,7 +253,7 @@ class _AjouterVehiculeState extends State<AjouterVehicule> {
 
   static Future<MySqlConnection> getConnection() async {
     final conn = await MySqlConnection.connect(ConnectionSettings(
-        host: '10.0.2.2', port: 3306, user: 'root', db: 'taxiapp'));
+        host: 'shuttle.myguide.ma', user: 'myguidem', password: 'aqJ6gVU;6O79-y',db: 'myguidem_taxiapp'));
     return conn;
   }
 
