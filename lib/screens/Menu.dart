@@ -280,7 +280,7 @@ else
 
           ),
           Container(
-            padding: EdgeInsets.only(left: SizeConfig.safeBlockVertical * 40, top: SizeConfig.safeBlockVertical *7, right: SizeConfig.safeBlockHorizontal *4),
+            padding: EdgeInsets.only(left: SizeConfig.safeBlockVertical * 20, top: SizeConfig.safeBlockVertical *7, right: SizeConfig.safeBlockHorizontal *4),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

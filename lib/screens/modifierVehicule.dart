@@ -45,8 +45,8 @@ class _ModifierVehiculeState extends State<ModifierVehicule> {
   static int userMarque_id;
   static int userType_id;
   String ctitle = "testphoto";
-  static var marque;
-  static var categ;
+  static var marque='';
+  static var categ='';
   @override
   void dispose() {
     // Clean up the controller when the widget is removed from the widget tree.
