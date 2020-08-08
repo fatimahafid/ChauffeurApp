@@ -121,15 +121,15 @@ class _MenuState extends State<Menu> {
 if(categorie=='Petit taxi')
 
  setState(() {
-      tablename = 'pilept';
+      tablename = 'pilepts';
     });
 else if(categorie=='Grand taxi')
     setState(() {
-      tablename = 'pilegt';
+      tablename = 'pilegts';
     });
 else
   setState(() {
-    tablename = 'pilevl';
+    tablename = 'pilevlss';
   });
     print("test de session"+tablename.toString());
   }
@@ -301,15 +301,18 @@ else
                     SizedBox(width:  SizeConfig.safeBlockVertical * 2),
 
                     new GestureDetector(
+
                     onTap: () {
                        print('logout');
                        logout();
                     },
-                      child: Icon(
-                        Icons.power_settings_new,
-                        color: Colors.white,
-                        size: 33.0,
-                        semanticLabel: '',
+                      child: Container(
+                        child: Icon(
+                          Icons.power_settings_new,
+                          color: Colors.white,
+                          size: 33.0,
+                          semanticLabel: '',
+                        ),
                       ),
                     ),
                   ],

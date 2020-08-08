@@ -9,7 +9,7 @@ import 'package:flutter_session/flutter_session.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart';
 import 'dart:convert';
-import 'dart:io';
+import 'dart:io'  ;
 import 'package:async/async.dart';
 import 'package:flutter/src/widgets/basic.dart' as row ;
 import 'package:http/http.dart' as http;
@@ -18,6 +18,9 @@ import 'package:path_provider/path_provider.dart';
 import 'package:image/image.dart' as Img;
 import 'dart:math' as Math;
 import 'package:flutter_session/flutter_session.dart';
+import 'package:dio/dio.dart' as dio;
+import 'package:http_parser/http_parser.dart';
+
 
 
 
@@ -68,6 +71,40 @@ class _AjouterVehiculeState extends State<AjouterVehicule> {
 
   }
 
+  test()async{
+    try {
+      ///[1] CREATING INSTANCE
+      var dioRequest = dio.Dio();
+      var url1="http://10.0.2.2/taxiapp/upload.php";
+      dioRequest.options.baseUrl = url1;
+
+      //[2] ADDING TOKEN
+      dioRequest.options.headers = {
+        'Authorization': '<IF-YOU-NEED-ADD-TOKEN-HERE>',
+        'Content-Type': 'application/x-www-form-urlencoded'
+      };
+
+      //[3] ADDING EXTRA INFO
+      var formData =
+      new dio.FormData.fromMap({'<SOME-EXTRA-FIELD>': 'username-forexample'});
+
+      //[4] ADD IMAGE TO UPLOAD
+      var file = await dio.MultipartFile.fromFile(_image.path,
+          filename: basename(_image.path),
+          contentType: MediaType("image", basename(_image.path)));
+
+      formData.files.add(MapEntry('photo', file));
+
+      //[5] SEND TO SERVER
+      var response = await dioRequest.post(
+        url1,
+        data: formData,
+      );
+      final result = json.decode(response.toString())['result'];
+    } catch (err) {
+      print('ERROR  $err');
+    }
+  }
   static List<String> getMarques(){
     List<String> marques=List<String>() ;
 
@@ -137,12 +174,12 @@ class _AjouterVehiculeState extends State<AjouterVehicule> {
 
 
   }
-  _ajout(numtaxi, numAgrement, numImmatriculation, image, marque,type,chauffeur_id,BuildContext context) async {
+  _ajout(numtaxi, numAgrement, numImmatriculation, image, marque,type,chauffeurId,BuildContext context) async {
     // Open a connection (testdb should already exist)
     print('in insert method');
     int marque_id;
     int type_id;
-    if((is_taxi && (agrem.text=="" || numtaxi=="") )|| immatr.text==""  || _isimageEmpty==true || marque==null || type==null )
+    if((is_taxi && (agrem.text=="" || numtaxi=="") )|| immatr.text==""   || marque==null || type==null || (is_taxi==false && _isimageEmpty==true ))
     {
 
       setState(() {
@@ -179,7 +216,7 @@ class _AjouterVehiculeState extends State<AjouterVehicule> {
       var result = await conn.query(
 
           'insert into vehicules (numTaxi, numAgrement, numImmatriculation,deleted_at,image, marque_id, type_id,chauffeur_id,created_at, updated_at) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-          [numtaxi, numAgrement, numImmatriculation, null,image, marque_id,type_id,chauffeur_id,now.toUtc(),null]);
+          [numtaxi, numAgrement, numImmatriculation, null,image, marque_id,type_id,chauffeurId,now.toUtc(),null]);
 
       await session.set("categorie", type);
 
@@ -230,8 +267,8 @@ class _AjouterVehiculeState extends State<AjouterVehicule> {
   Future upload(File imageFile) async{
     var stream= new http.ByteStream(DelegatingStream.typed(imageFile.openRead()));
     var length= await imageFile.length();
-    //var uri = Uri.parse("http://10.0.2.2/taxiapp/upload.php");
-    var uri = Uri.parse("shuttle.myguide.ma/upload.php");
+    var uri = Uri.parse("http://10.0.2.2/taxiapp/upload.php");
+   // var uri = Uri.parse("shuttle.myguide.ma/upload.php");
 
     var request = new http.MultipartRequest("POST", uri);
 
@@ -516,9 +553,7 @@ class _AjouterVehiculeState extends State<AjouterVehicule> {
                          child: RaisedButton(
                             onPressed: () {
                               getUser();
-                              _ajout(numtaxi.text, agrem.text, immatr.text, null, dropdownvalue1,dropdownvalue,userId,context);
-
-
+                        _ajout(numtaxi.text, agrem.text, immatr.text, null, dropdownvalue1,dropdownvalue,userId,context);
                             },
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(16.0),

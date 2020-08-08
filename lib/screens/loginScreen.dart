@@ -148,6 +148,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             var cin = '';
                             var numTel = '';
                             var sexe = '';
+                            var etat='';
                             var vehic_id;
                             var numTaxi = '';
                             var numImmatriculation = '';
@@ -167,7 +168,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               else{
                                 log=login.text.replaceAll(new RegExp(r"\s+"), "");
                                 var results = await conn.query(
-                                    'select login, password,id,nom,prenom,cin,numTel,sexe from chauffeurs where login = ?',
+                                    'select login, password,id,nom,prenom,cin,numTel,sexe,etat from chauffeurs where login = ?',
                                     [login.text]);
 
                                 var resultsVehic = await conn.query(
@@ -189,7 +190,20 @@ class _LoginScreenState extends State<LoginScreen> {
                                     cin = row[5];
                                     numTel = row[6];
                                     sexe = row[7];
+                                    etat=row[8].toString();
+
                                   }
+                                  if(etat=='en attente')
+                                   setState(() {
+                                     msg='Votre demande est en cours de traitement';
+                                   });
+                                  else if(etat=='refuse')
+
+                                  setState(() {
+                                    msg='Votre demande a été refusée';
+                                  });
+
+                                  else{
                                   for (var rowvehic in resultsVehic) {
                                     numTaxi = rowvehic[0];
                                     numAgrement = rowvehic[1];
@@ -296,7 +310,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       msg = "Mot de passe erroné";
                                     });
                                   }
-                                }}
+                                }}}
                             });
                             print("heey" + msg);
                           },
