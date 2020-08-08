@@ -213,7 +213,7 @@ else
       }
 
       setState(() {
-        ordre = ordr;
+        ordre = ordr+1;
       });
       print("ordre :" + ordre.toString());
 
