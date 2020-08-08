@@ -36,7 +36,7 @@ class _MenuState extends State<Menu> {
   var touriste;
   var isStopped=false;
   String username='';
-  var ordre;
+  var ordre='';
 
   @override
   void initState() {
@@ -213,8 +213,10 @@ else
       }
 
       setState(() {
-        ordre = ordr+1;
+        ordre = ordr.toString();
+
       });
+
       print("ordre :" + ordre.toString());
 
 
@@ -299,7 +301,7 @@ else
 
           ),
           Container(
-            padding: EdgeInsets.only(left: SizeConfig.safeBlockVertical * 20, top: SizeConfig.safeBlockVertical *7, right: SizeConfig.safeBlockHorizontal *4),
+            padding: EdgeInsets.only(left: SizeConfig.safeBlockVertical * 10, top: SizeConfig.safeBlockVertical *7, right: SizeConfig.safeBlockHorizontal *4),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -307,6 +309,20 @@ else
 
                 Row(
                   children: <Widget>[
+                    Container(
+                      child: Text(
+                        "Votre Ordre: "+ordre.toString(),
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 22,
+                          fontFamily: "Pacificio",
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.right,
+                      ),
+                    ),
+                    SizedBox(width:  SizeConfig.safeBlockVertical * 5),
+
                     Text(
                       username,
                       style: TextStyle(
@@ -328,7 +344,7 @@ else
                       child: Container(
                         child: Icon(
                           Icons.power_settings_new,
-                          color: Colors.white,
+                          color: Color(0xffe6b301),
                           size: 33.0,
                           semanticLabel: '',
                         ),
@@ -406,7 +422,7 @@ else
                                   context: context,
                                   type: AlertType.success,
                                   title: "Vous êtes ajoutés à la file d'attente.",
-                                  desc: "Votre ordre est "+ordre.toString(),
+                                  desc: "",
                                   buttons: [
                                     DialogButton(
 
