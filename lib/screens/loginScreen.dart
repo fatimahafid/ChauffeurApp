@@ -39,6 +39,7 @@ class _LoginScreenState extends State<LoginScreen> {
     var digest = md5.convert(content);
     return hex.encode(digest.bytes);
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -100,7 +100,7 @@ class _ModifierVehiculeState extends State<ModifierVehicule> {
       dropdownvalue=categ;
     });
 
-    print("test de session vehic" + userId.toString() + " / " + dropdownvalue.toString());
+    print("test de session vehic" + userId.toString() + " / " + userNumTaxi.toString());
   }
 
   @override
@@ -512,7 +512,6 @@ class _ModifierVehiculeState extends State<ModifierVehicule> {
                                       numtaxi.text,
                                       agrem.text,
                                       immatr.text,
-
                                       dropdownvalue1,
                                       dropdownvalue,
                                       userVehicId);
