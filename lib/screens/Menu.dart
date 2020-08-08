@@ -36,6 +36,7 @@ class _MenuState extends State<Menu> {
   var touriste;
   var isStopped=false;
   String username='';
+  var ordre='';
 
   @override
   void initState() {
@@ -97,7 +98,7 @@ class _MenuState extends State<Menu> {
           isStopped=true;
         });
 
-      String msg="Vous etes affectez au touriste numéro "+touriste.toString();
+      String msg="Vous êtes affectés au touriste numéro "+touriste.toString();
         showOngoingNotification(
             notifications, title: msg,
             body: null);
@@ -121,15 +122,15 @@ class _MenuState extends State<Menu> {
 if(categorie=='Petit taxi')
 
  setState(() {
-      tablename = 'pilept';
+      tablename = 'pilepts';
     });
 else if(categorie=='Grand taxi')
     setState(() {
-      tablename = 'pilegt';
+      tablename = 'pilegts';
     });
 else
   setState(() {
-    tablename = 'pilevl';
+    tablename = 'pilevls';
   });
     print("test de session"+tablename.toString());
   }
@@ -198,6 +199,26 @@ else
       setState(() {
         courseId = result.insertId;
       });
+      var result2 = await conn.query(
+
+          'select count(*) from ${tablename} ',
+          [
+          ]);
+      setState(() {
+        courseId = result.insertId;
+      });
+      var ordr;
+      for (var row in result2) {
+        ordr=row[0];
+      }
+
+      setState(() {
+        ordre = ordr.toString();
+
+      });
+
+      print("ordre :" + ordre.toString());
+
 
       await session.set("courseId",result.insertId);
       await session.set("tablename",tablename);
@@ -280,7 +301,7 @@ else
 
           ),
           Container(
-            padding: EdgeInsets.only(left: SizeConfig.safeBlockVertical * 40, top: SizeConfig.safeBlockVertical *7, right: SizeConfig.safeBlockHorizontal *4),
+            padding: EdgeInsets.only(left: SizeConfig.safeBlockVertical * 3, top: SizeConfig.safeBlockVertical *7),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -288,11 +309,25 @@ else
 
                 Row(
                   children: <Widget>[
+                    Container(
+                      child: Text(
+                        "Votre Ordre: "+ordre.toString(),
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 21,
+                          fontFamily: "Pacificio",
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.right,
+                      ),
+                    ),
+                    SizedBox(width:  SizeConfig.safeBlockVertical * 5),
+
                     Text(
                       username,
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 22,
+                        fontSize: 21,
                         fontFamily: "Pacificio",
                         fontWeight: FontWeight.bold,
                       ),
@@ -301,15 +336,18 @@ else
                     SizedBox(width:  SizeConfig.safeBlockVertical * 2),
 
                     new GestureDetector(
+
                     onTap: () {
                        print('logout');
                        logout();
                     },
-                      child: Icon(
-                        Icons.power_settings_new,
-                        color: Colors.white,
-                        size: 33.0,
-                        semanticLabel: '',
+                      child: Container(
+                        child: Icon(
+                          Icons.power_settings_new,
+                          color: Color(0xffe6b301),
+                          size: 33.0,
+                          semanticLabel: '',
+                        ),
                       ),
                     ),
                   ],
@@ -383,8 +421,8 @@ else
                                 return Alert(
                                   context: context,
                                   type: AlertType.success,
-                                  title: "Succès",
-                                  desc: "Vous êtes ajoutés à la file d'attente.",
+                                  title: "Vous êtes ajoutés à la file d'attente.",
+                                  desc: "",
                                   buttons: [
                                     DialogButton(
 
@@ -429,7 +467,7 @@ else
                                   children: <Widget>[
                                     Container(
                                       padding: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3),
-                                      child: Text('Je suis pret',
+                                      child: Text('Je suis prêt',
                                           style: TextStyle(
                                             fontSize: 22,
                                           ),

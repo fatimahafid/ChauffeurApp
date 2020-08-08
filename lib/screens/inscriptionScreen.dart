@@ -376,7 +376,7 @@ class _InscriptionScreenState extends State<InscriptionScreen> {
           vsexe = 2;
         }
         var result = await conn.query(
-            'insert into chauffeurs (login, password, cin, nom, prenom,numTel,sexe, note, deleted_at, created_at, updated_at) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+            'insert into chauffeurs (login, password, cin, nom, prenom,numTel,sexe, note,etat, deleted_at, created_at, updated_at) values (?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?)',
             [
               v_login,
               v_mdp,
@@ -386,6 +386,7 @@ class _InscriptionScreenState extends State<InscriptionScreen> {
               v_tel,
               v_sexe,
               null,
+              'en attente',
               null,
               null,
               null

@@ -29,9 +29,15 @@ class mdpoublie extends StatefulWidget {
 
 class _mdpoublieState extends State<mdpoublie> {
 
+  var titre="Génération du mot de passe ";
   var password ;
   final login = TextEditingController();
   int rand;
+  String msg='';
+  var iscorrect;
+  String text='';
+  var hide=false;
+  AlertType res=AlertType.success;
   generateMd5(String data) {
     var content = new Utf8Encoder().convert(data);
     var md5 = crypto.md5;
@@ -39,15 +45,50 @@ class _mdpoublieState extends State<mdpoublie> {
     return hex.encode(digest.bytes);
   }
   updatepassword(){
-    rand= new Math.Random().nextInt(100000);
 
+
+    rand= new Math.Random().nextInt(100000);
 
     var hash= generateMd5(rand.toString());
 
     setState(() {
       password=hash;
     });
-    getConnection().then((conn) async {
+     getConnection().then((conn) async {
+      var results = await conn.query(
+          'select login from chauffeurs where login = ?',
+          [login.text]);
+
+
+
+      if (results.isEmpty) {
+        print('result is empty');
+
+        setState(() {
+
+          hide=false;
+          msg = 'login erroné';
+          iscorrect=false;
+
+          res = AlertType.error;
+          text="Login erroné";
+          text=msg;
+
+
+        });
+      } else{
+
+        print('result is not empty');
+
+        setState(() {
+          hide=true;
+
+          iscorrect=true;
+          msg = '';
+          res = AlertType.success;
+          text="Votre nouveau mot de passe est :"+rand.toString();
+
+        });
       var result = await conn.query(
 
           'update chauffeurs set password=? where login=?',
@@ -57,8 +98,13 @@ class _mdpoublieState extends State<mdpoublie> {
             login.text,
 
           ]);
-      conn.close();
+      setState(() {
+        titre="Votre nouveau mot de passe est :"+rand.toString();
+      });
+      conn.close();}
     });
+
+
   }
 
 
@@ -85,8 +131,24 @@ class _mdpoublieState extends State<mdpoublie> {
             height: MediaQuery.of(context).size.height,
             color: Color(0xFFF001117).withOpacity(0.8),
           ),
-          Column(
-            children: <Widget>[],
+
+          Container(
+            padding: EdgeInsets.only(left: SizeConfig.safeBlockVertical * 5, top: SizeConfig.safeBlockVertical *7, right: SizeConfig.safeBlockHorizontal *4),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+
+                Row(
+                  children: <Widget>[
+
+                    SizedBox(width:  SizeConfig.safeBlockVertical * 2),
+
+
+                  ],
+                ),
+              ],
+            ),
           ),
           SafeArea(
             child: SingleChildScrollView(
@@ -102,8 +164,8 @@ class _mdpoublieState extends State<mdpoublie> {
                         left: SizeConfig.safeBlockHorizontal * 6,
                         right: SizeConfig.safeBlockHorizontal * 6,
                         bottom: SizeConfig.safeBlockVertical * 8,
-                        top: SizeConfig.safeBlockVertical * 18),
-                    height: MediaQuery.of(context).size.height * 0.50,
+                        top: SizeConfig.safeBlockVertical * 15),
+                    height: MediaQuery.of(context).size.height * 0.70,
                     width: MediaQuery.of(context).size.width,
                     decoration: BoxDecoration(
                         color: Colors.white,
@@ -120,12 +182,30 @@ class _mdpoublieState extends State<mdpoublie> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
+                        new GestureDetector(
+
+                          onTap: () {
+                            Navigator.pushReplacement(context,
+                                MaterialPageRoute(builder: (BuildContext ctx) => LoginScreen()));
+
+                          },
+                          child: Container(
+                            child: Icon(
+                              Icons.arrow_back,
+                              color: Colors.black,
+                              size: 33.0,
+                              semanticLabel: '',
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: SizeConfig.safeBlockVertical * 2),
+
                         Container(
                           margin: EdgeInsets.only(
                               left: SizeConfig.safeBlockHorizontal * 5,
                               right: SizeConfig.safeBlockHorizontal * 5,
                               top: SizeConfig.safeBlockVertical * 0),
-                          child: Text("Génération du mot de passe ",
+                          child: Text(titre,
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 color: Color(0xFFF032f41),
@@ -134,8 +214,18 @@ class _mdpoublieState extends State<mdpoublie> {
                               )),
                         ),
 
-                        SizedBox(height: SizeConfig.safeBlockVertical * 5),
-                        Container(
+                      Container(
+                        child:Center(
+                         child: Text(msg, style: TextStyle(
+                          color: Colors.redAccent,
+                          fontSize: 16,
+                           //fontWeight: FontWeight.bold,
+                              )),
+                              ),
+                              ),
+      SizedBox(height: SizeConfig.safeBlockVertical * 5),
+
+      Container(
                           height: SizeConfig.safeBlockVertical * 10,
                           child: CustomTextField(
                             controller:login,
@@ -145,40 +235,15 @@ class _mdpoublieState extends State<mdpoublie> {
                               size: 27,
                               color: Color(0xFFF032f41),
                             ),
+                            enabled: !hide,
                           ),
+
                         ),
                         SizedBox(height: SizeConfig.safeBlockVertical * 4),
 
                         RaisedButton(
-                          onPressed: () {
-                            updatepassword();
-                         return Alert(
-                              context: context,
-                              type: AlertType.success,
-                              title: "Succès",
-                              desc: "Votre nouveau mot de passe est :"+rand.toString(),
-                              buttons: [
-                                DialogButton(
+    onPressed: hide ? null : () =>  updatepassword(),
 
-
-                                  child: Text(
-
-                                    "Ok",
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 20),
-                                  ),
-
-                                  onPressed: () => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => LoginScreen()),
-                                  ),
-                                  width: 120,
-                                )
-                              ],
-                            ).show();
-
-                          },
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(16.0),
                               side: BorderSide(color: Colors.white)),
