@@ -129,7 +129,7 @@ else if(categorie=='Grand taxi')
     });
 else
   setState(() {
-    tablename = 'pilevlss';
+    tablename = 'pilevls';
   });
     print("test de session"+tablename.toString());
   }
@@ -432,7 +432,7 @@ else
                                   children: <Widget>[
                                     Container(
                                       padding: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3),
-                                      child: Text('Je suis pret',
+                                      child: Text('Je suis prêt',
                                           style: TextStyle(
                                             fontSize: 22,
                                           ),

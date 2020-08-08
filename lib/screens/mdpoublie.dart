@@ -165,7 +165,7 @@ class _mdpoublieState extends State<mdpoublie> {
                         right: SizeConfig.safeBlockHorizontal * 6,
                         bottom: SizeConfig.safeBlockVertical * 8,
                         top: SizeConfig.safeBlockVertical * 15),
-                    height: MediaQuery.of(context).size.height * 0.67,
+                    height: MediaQuery.of(context).size.height * 0.70,
                     width: MediaQuery.of(context).size.width,
                     decoration: BoxDecoration(
                         color: Colors.white,

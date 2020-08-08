@@ -71,40 +71,7 @@ class _AjouterVehiculeState extends State<AjouterVehicule> {
 
   }
 
-  test()async{
-    try {
-      ///[1] CREATING INSTANCE
-      var dioRequest = dio.Dio();
-      var url1="http://10.0.2.2/taxiapp/upload.php";
-      dioRequest.options.baseUrl = url1;
 
-      //[2] ADDING TOKEN
-      dioRequest.options.headers = {
-        'Authorization': '<IF-YOU-NEED-ADD-TOKEN-HERE>',
-        'Content-Type': 'application/x-www-form-urlencoded'
-      };
-
-      //[3] ADDING EXTRA INFO
-      var formData =
-      new dio.FormData.fromMap({'<SOME-EXTRA-FIELD>': 'username-forexample'});
-
-      //[4] ADD IMAGE TO UPLOAD
-      var file = await dio.MultipartFile.fromFile(_image.path,
-          filename: basename(_image.path),
-          contentType: MediaType("image", basename(_image.path)));
-
-      formData.files.add(MapEntry('photo', file));
-
-      //[5] SEND TO SERVER
-      var response = await dioRequest.post(
-        url1,
-        data: formData,
-      );
-      final result = json.decode(response.toString())['result'];
-    } catch (err) {
-      print('ERROR  $err');
-    }
-  }
   static List<String> getMarques(){
     List<String> marques=List<String>() ;
 
@@ -216,7 +183,7 @@ class _AjouterVehiculeState extends State<AjouterVehicule> {
       var result = await conn.query(
 
           'insert into vehicules (numTaxi, numAgrement, numImmatriculation,deleted_at,image, marque_id, type_id,chauffeur_id,created_at, updated_at) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-          [numtaxi, numAgrement, numImmatriculation, null,image, marque_id,type_id,chauffeurId,now.toUtc(),null]);
+          [numtaxi, numAgrement, numImmatriculation, null,_image, marque_id,type_id,chauffeurId,now.toUtc(),null]);
 
       await session.set("categorie", type);
 
@@ -353,6 +320,24 @@ class _AjouterVehiculeState extends State<AjouterVehicule> {
                                 fontFamily: "Pacificio",
                               )),
                         ),
+
+
+
+                        Container(
+                          height: SizeConfig.safeBlockHorizontal * 15,
+                          child: CustomTextField(
+                            controller:immatr,
+
+                            label: "Num Immatriculation",
+                            icon: Icon(
+                              Icons.local_taxi,
+                              size: 27,
+                              color: Color(0xFFF032f41),
+                            ),
+
+                          ),
+                        ),
+                        SizedBox(height: SizeConfig.safeBlockHorizontal * 4),
                         Container(
                           height: SizeConfig.safeBlockHorizontal * 15,
                           child: Container(
@@ -374,7 +359,7 @@ class _AjouterVehiculeState extends State<AjouterVehicule> {
                               isExpanded: true,
                               value: dropdownvalue,
                               icon: Icon(Icons.keyboard_arrow_down,color: Color(0xFFF032f41),
-                                ),
+                              ),
                               iconSize: 27,
                               elevation: 20,
                               onChanged: (String newval){
@@ -397,7 +382,7 @@ class _AjouterVehiculeState extends State<AjouterVehicule> {
                           ),
                         ),
 
-                      /*  RaisedButton(
+                        /*  RaisedButton(
                           child: Text("UPLOAD"),
                           onPressed:(){
                             upload(_image);
@@ -442,23 +427,6 @@ class _AjouterVehiculeState extends State<AjouterVehicule> {
                                 );
                               }).toList(),
                             ),
-                          ),
-                        ),
-
-
-                        SizedBox(height: SizeConfig.safeBlockHorizontal * 4),
-                        Container(
-                          height: SizeConfig.safeBlockHorizontal * 15,
-                          child: CustomTextField(
-                            controller:immatr,
-
-                            label: "Num Immatriculation",
-                            icon: Icon(
-                              Icons.local_taxi,
-                              size: 27,
-                              color: Color(0xFFF032f41),
-                            ),
-
                           ),
                         ),
 

@@ -45,8 +45,8 @@ class _ModifierVehiculeState extends State<ModifierVehicule> {
   static int userMarque_id;
   static int userType_id;
   String ctitle = "testphoto";
-  static var marque=' a';
-  static var categ='a ';
+  static var marque=' ';
+  static var categ='';
 
   @override
   void dispose() {
@@ -344,6 +344,24 @@ class _ModifierVehiculeState extends State<ModifierVehicule> {
                                     fontFamily: "Pacificio",
                                   )),
                             ),
+
+
+
+
+                            Container(
+                              height: SizeConfig.safeBlockHorizontal * 15,
+                              child: CustomTextField(
+                                controller: immatr,
+                                label: "Num Immatriculation",
+                                icon: Icon(
+                                  Icons.local_taxi,
+                                  size: 27,
+                                  color: Color(0xFFF032f41),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                                height: SizeConfig.safeBlockHorizontal * 2),
                             Container(
                               height: SizeConfig.safeBlockHorizontal * 15,
                               child: Container(
@@ -385,7 +403,8 @@ class _ModifierVehiculeState extends State<ModifierVehicule> {
                                 ),
                               ),
                             ),
-
+                            SizedBox(
+                                height: SizeConfig.safeBlockHorizontal * 4),
                             Container(
                               height: SizeConfig.safeBlockHorizontal * 15,
                               child: Container(
@@ -435,20 +454,6 @@ class _ModifierVehiculeState extends State<ModifierVehicule> {
                                 label: "Num Agrément",
                                 icon: Icon(
                                   Icons.credit_card,
-                                  size: 27,
-                                  color: Color(0xFFF032f41),
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                                height: SizeConfig.safeBlockHorizontal * 4),
-                            Container(
-                              height: SizeConfig.safeBlockHorizontal * 15,
-                              child: CustomTextField(
-                                controller: immatr,
-                                label: "Num Immatriculation",
-                                icon: Icon(
-                                  Icons.local_taxi,
                                   size: 27,
                                   color: Color(0xFFF032f41),
                                 ),

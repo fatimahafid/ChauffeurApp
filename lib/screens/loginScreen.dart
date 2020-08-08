@@ -208,7 +208,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     numTaxi = rowvehic[0];
                                     numAgrement = rowvehic[1];
                                     numImmatriculation = rowvehic[2];
-                                    image = rowvehic[3];
+                                 //   image = rowvehic[3];
                                     marque_id = rowvehic[4];
                                     type_id = rowvehic[5];
                                     vehic_id = rowvehic[6];
