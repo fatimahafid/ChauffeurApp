@@ -178,7 +178,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                                 if (results.isEmpty) {
                                   setState(() {
-                                    msg = "Authetificateur erroné";
+                                    msg = "Authentificateur erroné";
                                   });
                                 } else {
                                   for (var row in results) {

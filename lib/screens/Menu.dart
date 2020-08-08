@@ -36,6 +36,7 @@ class _MenuState extends State<Menu> {
   var touriste;
   var isStopped=false;
   String username='';
+  var ordre;
 
   @override
   void initState() {
@@ -97,7 +98,7 @@ class _MenuState extends State<Menu> {
           isStopped=true;
         });
 
-      String msg="Vous etes affectez au touriste numéro "+touriste.toString();
+      String msg="Vous êtes affectés au touriste numéro "+touriste.toString();
         showOngoingNotification(
             notifications, title: msg,
             body: null);
@@ -198,6 +199,24 @@ else
       setState(() {
         courseId = result.insertId;
       });
+      var result2 = await conn.query(
+
+          'select count(*) from ${tablename} ',
+          [
+          ]);
+      setState(() {
+        courseId = result.insertId;
+      });
+      var ordr;
+      for (var row in result2) {
+        ordr=row[0];
+      }
+
+      setState(() {
+        ordre = ordr;
+      });
+      print("ordre :" + ordre.toString());
+
 
       await session.set("courseId",result.insertId);
       await session.set("tablename",tablename);
@@ -386,8 +405,8 @@ else
                                 return Alert(
                                   context: context,
                                   type: AlertType.success,
-                                  title: "Succès",
-                                  desc: "Vous êtes ajoutés à la file d'attente.",
+                                  title: "Vous êtes ajoutés à la file d'attente.",
+                                  desc: "Votre ordre est "+ordre.toString(),
                                   buttons: [
                                     DialogButton(
 
