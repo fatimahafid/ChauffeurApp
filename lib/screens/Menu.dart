@@ -301,7 +301,7 @@ else
 
           ),
           Container(
-            padding: EdgeInsets.only(left: SizeConfig.safeBlockVertical * 10, top: SizeConfig.safeBlockVertical *7, right: SizeConfig.safeBlockHorizontal *4),
+            padding: EdgeInsets.only(left: SizeConfig.safeBlockVertical * 3, top: SizeConfig.safeBlockVertical *7),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -314,7 +314,7 @@ else
                         "Votre Ordre: "+ordre.toString(),
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 22,
+                          fontSize: 21,
                           fontFamily: "Pacificio",
                           fontWeight: FontWeight.bold,
                         ),
@@ -327,7 +327,7 @@ else
                       username,
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 22,
+                        fontSize: 21,
                         fontFamily: "Pacificio",
                         fontWeight: FontWeight.bold,
                       ),
