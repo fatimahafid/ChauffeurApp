@@ -46,7 +46,7 @@ class _ModifierVehiculeState extends State<ModifierVehicule> {
   static int userType_id;
   String ctitle = "testphoto";
   static var marque=' ';
-  static var categ='';
+  static var categ=' ';
 
   @override
   void dispose() {
@@ -77,11 +77,11 @@ class _ModifierVehiculeState extends State<ModifierVehicule> {
     });
     setState(() {
       userNumTaxi = numTaxi;
-      numtaxi.text = userNumTaxi;
+      numtaxi.text = userNumTaxi.toString();
     });
     setState(() {
       userNumAgrement = numAgrement;
-      agrem.text = userNumAgrement;
+      agrem.text = userNumAgrement.toString();
     });
     setState(() {
       userNumImmatriculation = numImmatriculation;

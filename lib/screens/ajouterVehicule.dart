@@ -191,6 +191,11 @@ class _AjouterVehiculeState extends State<AjouterVehicule> {
       print('Inserted row id=${result.insertId}');
 
       await session.set("carId",result.insertId);
+      await session.set("numTaxi", numtaxi);
+      await session.set("numAgrement", numAgrement);
+      await session.set("numImmatriculation", numImmatriculation);
+      await session.set("marque_id", marque_id.toString());
+      await session.set("type_id", type_id.toString());
 
       // Finally, close the connection
       upload(_image);

@@ -61,6 +61,7 @@ class _EditProfilState extends State<EditProfil> {
     var login = await FlutterSession().get("login");
     var password = await FlutterSession().get("password");
     var sexe = await FlutterSession().get("sexe");
+    var numTaxi = await FlutterSession().get("numTaxi");
 
     setState(() {
       userId = id;
@@ -96,7 +97,7 @@ class _EditProfilState extends State<EditProfil> {
         " / " +
         userName +
         " / " +
-        userSexe.toString());
+        numTaxi.toString());
   }
 
   @override

@@ -13,7 +13,7 @@ import 'package:crypto/crypto.dart' as crypto;
 import 'package:crypto/crypto.dart' as crypto;
 import 'dart:convert';
 import 'package:convert/convert.dart';
-import 'package:flutter/src/widgets/basic.dart' as row ;
+import 'package:flutter/src/widgets/basic.dart' as row;
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -29,7 +29,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<MySqlConnection> getConnection() async {
     final conn = await MySqlConnection.connect(ConnectionSettings(
-        host: 'shuttle.myguide.ma', user: 'myguidem', password: 'aqJ6gVU;6O79-y',db: 'myguidem_taxiapp'));
+        host: 'shuttle.myguide.ma',
+        user: 'myguidem',
+        password: 'aqJ6gVU;6O79-y',
+        db: 'myguidem_taxiapp'));
     return conn;
   }
 
@@ -104,7 +107,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         Container(
                           height: SizeConfig.safeBlockVertical * 10,
                           child: CustomTextField(
-                            controller:login,
+                            controller: login,
                             label: "Login",
                             icon: Icon(
                               Icons.mail,
@@ -117,7 +120,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         Container(
                           height: SizeConfig.safeBlockVertical * 10,
                           child: CustomTextField(
-                            controller:password,
+                            controller: password,
                             label: "Mot de passe",
                             isPassword: true,
                             icon: Icon(
@@ -128,46 +131,45 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                         Container(
-                          child:Center(
-                            child: Text(msg, style: TextStyle(
-                              color: Colors.redAccent,
-                              fontSize: 16,
-                              //fontWeight: FontWeight.bold,
-
-
-                            )),
+                          child: Center(
+                            child: Text(msg,
+                                style: TextStyle(
+                                  color: Colors.redAccent,
+                                  fontSize: 16,
+                                  //fontWeight: FontWeight.bold,
+                                )),
                           ),
                         ),
                         SizedBox(height: SizeConfig.safeBlockVertical * 2),
                         RaisedButton(
                           onPressed: () {
-                            String log='';
+                            String log = '';
                             print("heey1");
                             var id;
-                            var nom='';
+                            var nom = '';
                             var prenom = '';
                             var cin = '';
                             var numTel = '';
                             var sexe = '';
-                            var etat='';
-                            var vehic_id;
+                            var etat = '';
                             var numTaxi = '';
                             var numImmatriculation = '';
                             var numAgrement = '';
                             var image = '';
+                            var vehic_id ;
                             var marque_id;
                             var type_id;
 
                             getConnection().then((conn) async {
                               var passw = '';
-                              if( login.text==''|| password.text=='') {
+                              if (login.text == '' || password.text == '') {
                                 setState(() {
-                                  msg ="Saisissez le login et le mot de passe s'il vous plait!";
+                                  msg =
+                                      "Saisissez le login et le mot de passe s'il vous plait!";
                                 });
-
-                              }
-                              else{
-                                log=login.text.replaceAll(new RegExp(r"\s+"), "");
+                              } else {
+                                log = login.text
+                                    .replaceAll(new RegExp(r"\s+"), "");
                                 var results = await conn.query(
                                     'select login, password,id,nom,prenom,cin,numTel,sexe,etat from chauffeurs where login = ?',
                                     [login.text]);
@@ -175,7 +177,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                 var resultsVehic = await conn.query(
                                     'select numTaxi, numAgrement,numImmatriculation,image,marque_id,type_id,chauffeur_id,id from vehicules where chauffeur_id in (select id from chauffeurs where login= ?)',
                                     [login.text]);
-
 
                                 if (results.isEmpty) {
                                   setState(() {
@@ -191,127 +192,129 @@ class _LoginScreenState extends State<LoginScreen> {
                                     cin = row[5];
                                     numTel = row[6];
                                     sexe = row[7];
-                                    etat=row[8].toString();
-
+                                    etat = row[8].toString();
                                   }
-                                  if(etat=='en attente')
-                                   setState(() {
-                                     msg='Votre demande est en cours de traitement';
-                                   });
-                                  else if(etat=='refuse')
-
-                                  setState(() {
-                                    msg='Votre demande a été refusée';
-                                  });
-
-                                  else{
                                   for (var rowvehic in resultsVehic) {
                                     numTaxi = rowvehic[0];
                                     numAgrement = rowvehic[1];
                                     numImmatriculation = rowvehic[2];
-                                 //   image = rowvehic[3];
+                                    //   image = rowvehic[3];
                                     marque_id = rowvehic[4];
                                     type_id = rowvehic[5];
                                     vehic_id = rowvehic[6];
                                   }
-                                  //final algorithm = PBKDF2();
-                                  // String hash = Password.hash(password.text ,algorithm);
-                                  //  if (hash==passw)
-                                  //  print("the password in data base is "+passw);
-                                  //  print("the same password in input  is "+hash);
-                                  var input_password=generateMd5(password.text);
-
-                                 // if(Password.verify(password.text, passw)    )                              {
-                                  if(passw==input_password )                              {
-
-                                    print("infos" +id.toString()+"/"+nom);
-                                    await session.set("id", id.toString());
-                                    await session.set("nom", nom);
-                                    await session.set("prenom", prenom);
-                                    await session.set("cin", cin);
-                                    await session.set("numTel", numTel);
-                                    await session.set("login", log);
-                                    await session.set("password", passw);
-                                    await session.set("sexe", sexe);
-                                    if(numTaxi==null)
-                                      numTaxi='';
-                                    await session.set("numTaxi", numTaxi);
-                                    if(numAgrement==null)
-                                      numAgrement='';
-                                    await session.set( "numAgrement", numAgrement);
-                                    await session.set("numImmatriculation",
-                                        numImmatriculation);
-                                    // await session.set("image", image);
-                                    await session.set(
-                                        "marque_id", marque_id.toString());
-                                    await session.set(
-                                        "type_id", type_id.toString());
-
-
-
-
-                                    print('avant');
-                                    SharedPreferences   prefs = await SharedPreferences.getInstance();
-                                    prefs?.setBool("isLoggedIn", true);
-                                    prefs.commit();
-                                    var status = prefs.getBool('isLoggedIn') ?? false;
-
-                                    print('apres '+status.toString());
-                                    //setState(() {
-                                    //
-                                    //  });
+                                  if (etat == 'en attente')
                                     setState(() {
-                                      msg = "";
-
+                                      msg =
+                                          'Votre demande est en cours de traitement';
                                     });
-                                    var vid;
+                                  else if (etat == 'refuse')
+                                    setState(() {
+                                      msg = 'Votre demande a été refusée';
+                                    });
+                                  else {
 
-                                    var type_libelle;
+                                    //final algorithm = PBKDF2();
+                                    // String hash = Password.hash(password.text ,algorithm);
+                                    //  if (hash==passw)
+                                    //  print("the password in data base is "+passw);
+                                    //  print("the same password in input  is "+hash);
+                                    var input_password =
+                                        generateMd5(password.text);
 
+                                    // if(Password.verify(password.text, passw)    )                              {
+                                    if (passw == input_password) {
+                                      print(
+                                          "infos" + id.toString() + "/" + numTaxi);
+                                      await session.set("id", id.toString());
+                                      await session.set("nom", nom);
+                                      await session.set("prenom", prenom);
+                                      await session.set("cin", cin);
+                                      await session.set("numTel", numTel);
+                                      await session.set("login", log);
+                                      await session.set("password", passw);
+                                      await session.set("sexe", sexe);
+                                  //    if (numTaxi == null) numTaxi = '';
+                                      await session.set("numTaxi", numTaxi);
+                                     // if (numAgrement == null) numAgrement = '';
+                                      await session.set(
+                                          "numAgrement", numAgrement);
+                                      await session.set("numImmatriculation",
+                                          numImmatriculation);
+                                      // await session.set("image", image);
+                                      await session.set(
+                                          "marque_id", marque_id.toString());
+                                      await session.set(
+                                          "type_id", type_id.toString());
 
-                                    var result1 = await conn.query(
-                                        'select id,type_id from vehicules where chauffeur_id=?', [ id ]);
+                                      print('avant');
+                                      SharedPreferences prefs =
+                                          await SharedPreferences.getInstance();
+                                      prefs?.setBool("isLoggedIn", true);
+                                      prefs.commit();
+                                      var status =
+                                          prefs.getBool('isLoggedIn') ?? false;
 
-                                    for (var row in result1) {
-                                      vid=row[0];
-                                      type_id=row[1];
-                                      print("vid :"+vid.toString());
-                                    }
-                                    await session.set(
-                                        "type_id", type_id.toString());
-                                    if(vid==null)
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => AjouterVehicule()),
-                                      );
-                                    else {
+                                      print('apres ' + status.toString());
+                                      //setState(() {
+                                      //
+                                      //  });
+                                      setState(() {
+                                        msg = "";
+                                      });
+                                      var vid;
 
-                                      print("type :"+type_id.toString());
-                                      print("id :"+type_id.toString());
+                                      var type_libelle;
 
-                                      var result2 = await conn.query("select libelle from types where id=?",[type_id]);
+                                      var result1 = await conn.query(
+                                          'select id,type_id from vehicules where chauffeur_id=?',
+                                          [id]);
 
-                                      for (var row in result2) {
-                                        type_libelle=row[0];
-
-                                        print("type :"+type_libelle);
+                                      for (var row in result1) {
+                                        vid = row[0];
+                                        type_id = row[1];
+                                        print("vid :" + vid.toString());
                                       }
-                                      await session.set("categorie",type_libelle);
+                                      await session.set(
+                                          "type_id", type_id.toString());
+                                      if (vid == null)
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  AjouterVehicule()),
+                                        );
+                                      else {
+                                        print("type :" + type_id.toString());
+                                        print("id :" + type_id.toString());
 
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => Menu()),
-                                      );
+                                        var result2 = await conn.query(
+                                            "select libelle from types where id=?",
+                                            [type_id]);
+
+                                        for (var row in result2) {
+                                          type_libelle = row[0];
+
+                                          print("type :" + type_libelle);
+                                        }
+                                        await session.set(
+                                            "categorie", type_libelle);
+
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => Menu()),
+                                        );
+                                      }
+                                      //Navigator.pushReplacementNamed(context, '/ajouterVéhicule');
+                                    } else {
+                                      setState(() {
+                                        msg = "Mot de passe erroné";
+                                      });
                                     }
-                                    //Navigator.pushReplacementNamed(context, '/ajouterVéhicule');
-                                  } else {
-                                    setState(() {
-                                      msg = "Mot de passe erroné";
-                                    });
                                   }
-                                }}}
+                                }
+                              }
                             });
                             print("heey" + msg);
                           },
@@ -320,40 +323,32 @@ class _LoginScreenState extends State<LoginScreen> {
                               side: BorderSide(color: Colors.white)),
                           color: Color(0xffe6b301),
                           textColor: Colors.white,
-
                           child: Container(
                             height: SizeConfig.safeBlockVertical * 9,
                             width: double.infinity,
                             child: row.Row(
                               children: <Widget>[
                                 Container(
-
                                   margin: EdgeInsets.only(
-                                      left: SizeConfig.safeBlockHorizontal *
-                                          0),
-
+                                      left: SizeConfig.safeBlockHorizontal * 0),
                                   padding: EdgeInsets.only(
-                                      left: SizeConfig.safeBlockHorizontal *
-                                          4,
-                                      right: SizeConfig
-                                          .safeBlockHorizontal * 3),
-                                  child: Text(
-                                      "Se Connecter", style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold,
-
-
-
-                                  )),
+                                      left: SizeConfig.safeBlockHorizontal * 4,
+                                      right:
+                                          SizeConfig.safeBlockHorizontal * 3),
+                                  child: Text("Se Connecter",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 24,
+                                        fontWeight: FontWeight.bold,
+                                      )),
                                 ),
                                 SizedBox(width: 0),
                                 Container(
-                                  //width: 50.0,
-                                  //height: 50.0,
+                                    //width: 50.0,
+                                    //height: 50.0,
                                     margin: EdgeInsets.only(
-                                        right: SizeConfig
-                                            .safeBlockHorizontal * 5),
+                                        right:
+                                            SizeConfig.safeBlockHorizontal * 5),
                                     padding: const EdgeInsets.all(2.0),
                                     //I used some padding without fixed width and height
                                     decoration: new BoxDecoration(
@@ -363,12 +358,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                       color: Colors.white,
                                     ),
                                     child: Icon(Icons.arrow_forward,
-                                        color: Color(0xffe6b301), size: 28)
-                                ), //............
-
+                                        color: Color(0xffe6b301),
+                                        size: 28)), //............
                               ],
                             ),
-
                           ),
                         ),
                       ],
