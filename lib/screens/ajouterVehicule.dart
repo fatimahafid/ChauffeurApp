@@ -474,7 +474,7 @@ class _AjouterVehiculeState extends State<AjouterVehicule> {
 
                         SizedBox(height: SizeConfig.safeBlockHorizontal * 4),
 
-                        Container(
+                        /*   Container(
                           height: SizeConfig.safeBlockHorizontal * 15,
 
 
@@ -508,7 +508,7 @@ class _AjouterVehiculeState extends State<AjouterVehicule> {
                           ),
 
                         ),
-                        SizedBox(height: SizeConfig.safeBlockHorizontal * 2),
+                        SizedBox(height: SizeConfig.safeBlockHorizontal * 2),*/
                         Container(
                           child:Center(
                             child: Text(msg, style: TextStyle(

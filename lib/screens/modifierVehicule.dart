@@ -474,7 +474,7 @@ class _ModifierVehiculeState extends State<ModifierVehicule> {
                                 ),
                               ),
                             ),
-                            SizedBox(
+                          /*  SizedBox(
                                 height: SizeConfig.safeBlockHorizontal * 4),
                             Container(
                               height: SizeConfig.safeBlockHorizontal * 15,
@@ -504,7 +504,7 @@ class _ModifierVehiculeState extends State<ModifierVehicule> {
                                 ),
                                 onPressed: getImageGallery,
                               ),
-                            ),
+                            ),*/
                             SizedBox(
                                 height: SizeConfig.safeBlockHorizontal * 4),
                             Container(
