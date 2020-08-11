@@ -198,7 +198,7 @@ class _AjouterVehiculeState extends State<AjouterVehicule> {
       await session.set("type_id", type_id.toString());
 
       // Finally, close the connection
-      upload(_image);
+    //  upload(_image);
       await conn.close();
 
           });
@@ -237,7 +237,7 @@ class _AjouterVehiculeState extends State<AjouterVehicule> {
 
   }
 
-  Future upload(File imageFile) async{
+ /* Future upload(File imageFile) async{
     var stream= new http.ByteStream(DelegatingStream.typed(imageFile.openRead()));
     var length= await imageFile.length();
     var uri = Uri.parse("http://10.0.2.2/taxiapp/upload.php");
@@ -260,14 +260,15 @@ class _AjouterVehiculeState extends State<AjouterVehicule> {
       print(value);
     });
   }
-
+*/
   static Future<MySqlConnection> getConnection() async {
     final conn = await MySqlConnection.connect(ConnectionSettings(
         host: 'shuttle.myguide.ma', user: 'myguidem', password: 'aqJ6gVU;6O79-y',db: 'myguidem_taxiapp'));
     return conn;
   }
 
-  @override
+
+
   @override
   Widget build(BuildContext context) {
    // getMarques();
@@ -527,7 +528,7 @@ class _AjouterVehiculeState extends State<AjouterVehicule> {
                          child: RaisedButton(
                             onPressed: () {
                               getUser();
-                        _ajout(numtaxi.text, agrem.text, immatr.text, null, dropdownvalue1,dropdownvalue,userId,context);
+                        _ajout(numtaxi.text+"", agrem.text+"", immatr.text+"", null, dropdownvalue1,dropdownvalue,userId,context);
                             },
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(16.0),

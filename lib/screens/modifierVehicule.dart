@@ -76,15 +76,15 @@ class _ModifierVehiculeState extends State<ModifierVehicule> {
       userName = nom;
     });
     setState(() {
-      userNumTaxi = numTaxi;
+      userNumTaxi = numTaxi.toString();
       numtaxi.text = userNumTaxi.toString();
     });
     setState(() {
-      userNumAgrement = numAgrement;
+      userNumAgrement = numAgrement.toString();
       agrem.text = userNumAgrement.toString();
     });
     setState(() {
-      userNumImmatriculation = numImmatriculation;
+      userNumImmatriculation = numImmatriculation.toString();
       immatr.text = userNumImmatriculation;
     });
     setState(() {
@@ -108,9 +108,8 @@ class _ModifierVehiculeState extends State<ModifierVehicule> {
     getUser();
     getLaMarque();
     getLaCateg();
-   // print('categoriiiii:'+dropdownvalue);
-   // print('marqueeeee:'+dropdownvalue1);
-   // print('imageeeee:'+userImage);
+    dropdownvalue1=marque;
+    dropdownvalue=categ;
     return super.initState();
   }
 
@@ -227,7 +226,7 @@ class _ModifierVehiculeState extends State<ModifierVehicule> {
       print('Inserted row id=${result.insertId}');
 
       // Finally, close the connection
-      upload(_image);
+     // upload(_image);
       await conn.close();
     });
 
@@ -253,7 +252,7 @@ class _ModifierVehiculeState extends State<ModifierVehicule> {
     });
   }
 
-  Future upload(File imageFile) async {
+  /*Future upload(File imageFile) async {
     var stream =
         new http.ByteStream(DelegatingStream.typed(imageFile.openRead()));
     var length = await imageFile.length();
@@ -276,7 +275,7 @@ class _ModifierVehiculeState extends State<ModifierVehicule> {
     response.stream.transform(utf8.decoder).listen((value) {
       print(value);
     });
-  }
+  }*/
 
   static Future<MySqlConnection> getConnection() async {
     final conn = await MySqlConnection.connect(ConnectionSettings(
