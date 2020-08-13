@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:login_dash_animation/components/buttonLoginAnimation.dart';
 import 'package:login_dash_animation/components/customTextfield.dart';
-import 'package:login_dash_animation/screens/Menu.dart';
+import 'package:login_dash_animation/screens/homeScreen.dart';
 import 'package:login_dash_animation/SizeConfig.dart';
 import 'package:mysql1/mysql1.dart' hide Row;
 import 'package:flutter_session/flutter_session.dart';
@@ -11,10 +11,10 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:async/async.dart';
 import 'package:http/http.dart' as http;
-
 import 'package:path_provider/path_provider.dart';
 import 'package:image/image.dart' as Img;
 import 'dart:math' as Math;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ModifierVehicule extends StatefulWidget {
   @override
@@ -115,10 +115,14 @@ class _ModifierVehiculeState extends State<ModifierVehicule> {
     dropdownvalue1=marque;
     dropdownvalue=categ;
     //List<String> categories = getGategories();
-
     return super.initState();
   }
-
+  logout(BuildContext context) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.clear();
+    Navigator.pushReplacement( context,
+        MaterialPageRoute(builder: (BuildContext ctx) => HomeScreen()));
+  }
   static List<String> getMarques() {
     List<String> marques = List<String>();
 
@@ -188,7 +192,7 @@ class _ModifierVehiculeState extends State<ModifierVehicule> {
 
   }
   _update(numtaxi, numAgrement, numImmatriculation, marque, type,
-      vehic_id) async {
+      vehic_id, BuildContext context) async {
     // Open a connection (testdb should already exist)
     print('update method');
     int marque_id;
@@ -234,6 +238,7 @@ class _ModifierVehiculeState extends State<ModifierVehicule> {
       // Finally, close the connection
      // upload(_image);
       await conn.close();
+      logout( context);
     });
 
   }
@@ -350,7 +355,8 @@ class _ModifierVehiculeState extends State<ModifierVehicule> {
                             ),
 
 
-
+                            SizedBox(
+                                height: SizeConfig.safeBlockHorizontal * 2),
 
                             Container(
                               height: SizeConfig.safeBlockHorizontal * 15,
@@ -508,12 +514,9 @@ class _ModifierVehiculeState extends State<ModifierVehicule> {
                                       immatr.text,
                                       dropdownvalue1,
                                       dropdownvalue,
-                                      userVehicId);
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => Menu()),
-                                  );
+                                      userVehicId,context);
+
+
                                 },
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(16.0),
@@ -579,6 +582,9 @@ class _ModifierVehiculeState extends State<ModifierVehicule> {
           ),
         ],
       ),
+
     );
+
   }
+
 }

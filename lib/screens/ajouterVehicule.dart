@@ -68,6 +68,7 @@ class _AjouterVehiculeState extends State<AjouterVehicule> {
   }
   @override
   void initState() {
+     getUser();
     super.initState();
 
   }
@@ -589,4 +590,5 @@ class _AjouterVehiculeState extends State<AjouterVehicule> {
       ),
     );
   }
+
 }

@@ -6,7 +6,7 @@ import 'package:login_dash_animation/screens/ajouterVehicule.dart';
 import 'package:login_dash_animation/SizeConfig.dart';
 import 'package:flutter_session/flutter_session.dart';
 import 'package:flutter/src/widgets/basic.dart' as row;
-import 'package:login_dash_animation/screens/loginScreen.dart';
+import 'package:login_dash_animation/screens/homeScreen.dart';
 import 'package:mysql1/mysql1.dart';
 import 'package:password/password.dart';
 import 'package:crypto/crypto.dart' as crypto;
@@ -361,7 +361,7 @@ class _EditProfilState extends State<EditProfil> {
     print(userId);
     // Finally, close the connection
     await conn.close();
-    //logout();
+    logout();
   }
   generateMd5(String data) {
     var content = new Utf8Encoder().convert(data);
@@ -373,6 +373,6 @@ class _EditProfilState extends State<EditProfil> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.clear();
     Navigator.pushReplacement(context,
-        MaterialPageRoute(builder: (BuildContext ctx) => LoginScreen()));
+        MaterialPageRoute(builder: (BuildContext ctx) => HomeScreen()));
   }
 }
