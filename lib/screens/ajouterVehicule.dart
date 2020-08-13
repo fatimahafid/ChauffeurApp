@@ -64,7 +64,7 @@ class _AjouterVehiculeState extends State<AjouterVehicule> {
     setState(() {
     userName= nom;
     });
-  print("test de session ajout vehicule"+userId.toString()+" / "+userName);
+  print("test de session ajout vehicule  "+userId.toString()+" / "+userName);
   }
   @override
   void initState() {
@@ -147,7 +147,7 @@ class _AjouterVehiculeState extends State<AjouterVehicule> {
     print('in insert method');
     int marque_id;
     int type_id;
-    if((is_taxi && (agrem.text=="" || numtaxi=="") )|| immatr.text==""   || marque==null || type==null || (is_taxi==false && _isimageEmpty==true ))
+    if((is_taxi && (agrem.text=="" || numtaxi=="") )|| immatr.text==""   || marque==null || type==null)
     {
 
       setState(() {

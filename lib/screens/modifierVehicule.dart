@@ -28,8 +28,7 @@ class _ModifierVehiculeState extends State<ModifierVehicule> {
   final agrem = TextEditingController();
   final numtaxi = TextEditingController();
 
-  List<String> marques = getMarques();
-  List<String> categories = getGategories();
+
   var _isimageEmpty=true;
   var imageColor=Colors.white;
   var titre='Ajouter une image';
@@ -45,8 +44,13 @@ class _ModifierVehiculeState extends State<ModifierVehicule> {
   static int userMarque_id;
   static int userType_id;
   String ctitle = "testphoto";
-  static var marque=' ';
-  static var categ=' ';
+  static var marque='Marque';
+  static var categ='Catégorie';
+  List<String> marques=getMarques() ;
+  List<String> categories=getGategories() ;
+
+  String dropdownvalue=categ;
+  var dropdownvalue1=marque;
 
   @override
   void dispose() {
@@ -110,6 +114,8 @@ class _ModifierVehiculeState extends State<ModifierVehicule> {
     getLaCateg();
     dropdownvalue1=marque;
     dropdownvalue=categ;
+    //List<String> categories = getGategories();
+
     return super.initState();
   }
 
@@ -282,8 +288,7 @@ class _ModifierVehiculeState extends State<ModifierVehicule> {
         host: 'shuttle.myguide.ma', user: 'myguidem', password: 'aqJ6gVU;6O79-y',db: 'myguidem_taxiapp'));
     return conn;
   }
-  var dropdownvalue=categ;
-  var dropdownvalue1=marque;
+
 
   @override
   Widget build(BuildContext context) {
@@ -370,7 +375,8 @@ class _ModifierVehiculeState extends State<ModifierVehicule> {
                                     top: SizeConfig.safeBlockHorizontal * 4,
                                     left: SizeConfig.safeBlockHorizontal * 4,
                                     right: SizeConfig.safeBlockHorizontal * 4),
-                                child:DropdownButton<String>(
+                                child:DropdownButton(
+                                  value: null,
                                   hint: Text(categ,
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
@@ -378,23 +384,14 @@ class _ModifierVehiculeState extends State<ModifierVehicule> {
                                         fontSize: 18,
                                         fontFamily: "Pacificio",
                                       )),
-                                  isExpanded: true,
-                                  value: dropdownvalue,
-                                  icon: Icon(Icons.keyboard_arrow_down,color: Color(0xFFF032f41),
-                                  ),
-                                  iconSize: 27,
-                                  elevation: 20,
-                                  onChanged: (String value){
-                                    setState((){
-                                      dropdownvalue = value;
-                                      print("select:"+dropdownvalue);
-
+                                  isExpanded: true,                                  onChanged: (String newValue) {
+                                    setState(() {
+                                      dropdownvalue=newValue;
+                                      categ=newValue;
                                     });
-
                                   },
-                                  items: categories
-                                      .map<DropdownMenuItem<String>>((String value){
-                                    return DropdownMenuItem<String>(
+                                  items: categories.map((String value) {
+                                    return DropdownMenuItem(
                                       value: value,
                                       child: Text(value),
                                     );
@@ -413,7 +410,8 @@ class _ModifierVehiculeState extends State<ModifierVehicule> {
                                     top: SizeConfig.safeBlockHorizontal * 4,
                                     left: SizeConfig.safeBlockHorizontal * 4,
                                     right: SizeConfig.safeBlockHorizontal * 4),
-                                child:DropdownButton<String>(
+                                child:DropdownButton(
+                                  value: null,
                                   hint: Text(marque,
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
@@ -421,22 +419,14 @@ class _ModifierVehiculeState extends State<ModifierVehicule> {
                                         fontSize: 18,
                                         fontFamily: "Pacificio",
                                       )),
-                                  isExpanded: true,
-                                  value: dropdownvalue1,
-                                  icon: Icon(Icons.keyboard_arrow_down,color: Color(0xFFF032f41),
-                                  ),
-                                  iconSize: 27,
-                                  elevation: 20,
-                                  onChanged: (String newval){
-                                    setState((){
-                                      dropdownvalue1 = newval;
-                                      print("select:"+dropdownvalue1);
-                                    });
-
-                                  },
-                                  items: marques
-                                      .map<DropdownMenuItem<String>>((String value){
-                                    return DropdownMenuItem<String>(
+                                  isExpanded: true,                                  onChanged: (String newValue) {
+                                  setState(() {
+                                    dropdownvalue1=newValue;
+                                    marque=newValue;
+                                  });
+                                },
+                                  items: marques.map((String value) {
+                                    return DropdownMenuItem(
                                       value: value,
                                       child: Text(value),
                                     );
