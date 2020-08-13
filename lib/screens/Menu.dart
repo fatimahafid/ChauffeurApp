@@ -102,6 +102,8 @@ class _MenuState extends State<Menu> {
       print(' is that car affecetd ? ' + isaffected.toString());
 
       await conn.close();
+      conn=null;
+
     });
   }
 
