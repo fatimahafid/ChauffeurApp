@@ -49,8 +49,8 @@ class _ModifierVehiculeState extends State<ModifierVehicule> {
   List<String> marques=getMarques() ;
   List<String> categories=getGategories() ;
 
-  String dropdownvalue='G';
-  var dropdownvalue1;
+  String dropdownvalue=categ;
+  var dropdownvalue1=marque;
 
   @override
   void dispose() {

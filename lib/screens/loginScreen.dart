@@ -201,7 +201,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     //   image = rowvehic[3];
                                     marque_id = rowvehic[4];
                                     type_id = rowvehic[5];
-                                    vehic_id = rowvehic[6];
+                                    vehic_id = rowvehic[7];
                                   }
                                   if (etat == 'en attente')
                                     setState(() {
@@ -234,6 +234,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       await session.set("login", log);
                                       await session.set("password", passw);
                                       await session.set("sexe", sexe);
+                                   //   await session.set("carId", vehic_id);
                                   //    if (numTaxi == null) numTaxi = '';
                                       await session.set("numTaxi", numTaxi);
                                      // if (numAgrement == null) numAgrement = '';
@@ -299,7 +300,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                         }
                                         await session.set(
                                             "categorie", type_libelle);
-
+                                        await session.set(
+                                            "carId", vid);
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
