@@ -39,7 +39,7 @@ class _MenuState extends State<Menu> {
   void initState() {
     super.initState();
     getTablebycategorie();
-    getvehicule();
+   // getvehicule();
     getuseername();
 
     final settingsAndroid = AndroidInitializationSettings('icone');
@@ -108,6 +108,7 @@ class _MenuState extends State<Menu> {
   }
 
   getTablebycategorie() async {
+
     var categorie = await FlutterSession().get("categorie");
     if (categorie == 'Petit taxi')
       setState(() {
@@ -164,17 +165,42 @@ class _MenuState extends State<Menu> {
   logout() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.clear();
+
     Navigator.pushReplacement(context,
         MaterialPageRoute(builder: (BuildContext ctx) => HomeScreen()));
   }
 
   _Addtopile() async {
+  /*  var vid= FlutterSession().get("carId").toString();
+    setState(() {
+      carId=vid;
+    });
+*/
+
     isStopped = false;
+    var userid = await FlutterSession().get("id");
+    var vid;
     getTablebycategorie();
-    getvehicule();
-    print('this is the car id' + carId.toString());
+  //  getvehicule();
     getConnection().then((conn) async {
+      var result0=
+      await conn.query('select id from vehicules where chauffeur_id=?', [
+        userid,
+      ]);
+
+      await session.set("tablename", tablename);
+
+      for (var row in result0) {
+        vid = row[0];
+      }
+      print('car id ***************'+vid.toString());
+
+      setState(() {
+        carId = vid;
+      });
+      print(' kkk' + userid.toString() + carId.toString());
       var result = await conn.query(
+
           'insert into ${tablename} (vehicule_id, touriste_id) values (?, ?)',
           [carId, null]);
       setState(() {

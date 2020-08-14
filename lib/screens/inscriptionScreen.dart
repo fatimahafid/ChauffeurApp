@@ -238,23 +238,19 @@ class _InscriptionScreenState extends State<InscriptionScreen> {
                           Container(
                             height: SizeConfig.safeBlockHorizontal * 13,
                             child: RaisedButton(
-                              onPressed: () {
+                              onPressed: () async{
 
 
                                 print('hdhsfs');
                                 vlogin.toString() =='';
                                 print('ha login'+vlogin.toString());
-
+                                print("in button "+exist.toString());
                                var hash= generateMd5(vmdp.text);
                                 print("the password is " + hash);
                                 if (vlogin.text == "" || vmdp.text == ""|| vcin.text == "" ||
                                     vprenom.text == "" || vtel.text == "") {
                                   setState(() {
                                     msg = "Veuillez remplir tous les champs";
-                                  });
-                                }else if (exist==true) {
-                                  setState(() {
-                                    msg = "Login déjâ existant";
                                   });
                                 }
                                 else{
@@ -269,11 +265,7 @@ class _InscriptionScreenState extends State<InscriptionScreen> {
                                       vprenom.text,
                                       vtel.text,
                                       vsexe);
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => LoginScreen()),
-                                  );
+
                                 }
 
                               },
@@ -350,10 +342,15 @@ class _InscriptionScreenState extends State<InscriptionScreen> {
     return conn;
   }
   _inscription(v_login, v_mdp, v_cin, v_nom, v_prenom, v_tel, v_sexe) async {
+
     // Open a connection (testdb should already exist)
     List<String> chauffeurs = List<String>();
-    getConnection().then((conn) async {
-    var results = await conn.query(
+    //verifierlognin(vlogin.text);
+
+
+
+      getConnection().then((conn) async {
+          var results = await conn.query(
         ' select login from chauffeurs ');
     for (var row in results) {
       chauffeurs.add(row[0]);
@@ -362,12 +359,18 @@ class _InscriptionScreenState extends State<InscriptionScreen> {
     }
     for(int i=0; i<chauffeurs.length;i++) {
       if (vlogin.text == chauffeurs[i]) {
-        exist=true;
+        setState(() {
+          exist=true;
+
+        });
         print('impossiiible' + chauffeurs[i]);
       }}
-   if(exist==false){
 
-
+          if (exist == true)
+            setState(() {
+              msg = "Login déjâ existant";
+            });
+      else {
         print('here' + v_login);
 
         if (_character == SingingCharacter.femme) {
@@ -392,12 +395,21 @@ class _InscriptionScreenState extends State<InscriptionScreen> {
               null
             ]);
         print('Inserted row id=${result.insertId}');
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => LoginScreen()),
+        );
 
-   }
 
-    await conn.close();
-      });
+        await conn.close();
+      }});
+    setState(() {
+      exist = false;
+    });
     }
+
+
 
 
 

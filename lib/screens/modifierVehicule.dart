@@ -3,6 +3,7 @@ import 'package:login_dash_animation/components/buttonLoginAnimation.dart';
 import 'package:login_dash_animation/components/customTextfield.dart';
 import 'package:login_dash_animation/screens/homeScreen.dart';
 import 'package:login_dash_animation/SizeConfig.dart';
+import 'package:login_dash_animation/screens/loginScreen.dart';
 import 'package:mysql1/mysql1.dart' hide Row;
 import 'package:flutter_session/flutter_session.dart';
 import 'package:image_picker/image_picker.dart';
@@ -110,10 +111,10 @@ class _ModifierVehiculeState extends State<ModifierVehicule> {
   @override
   void initState() {
     getUser();
-    getLaMarque();
-    getLaCateg();
-    dropdownvalue1=marque;
-    dropdownvalue=categ;
+    dropdownvalue1= getLaMarque();
+    dropdownvalue=getLaCateg();
+    //dropdownvalue1=marque;
+   // dropdownvalue=categ;
     //List<String> categories = getGategories();
     return super.initState();
   }
@@ -121,7 +122,7 @@ class _ModifierVehiculeState extends State<ModifierVehicule> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.clear();
     Navigator.pushReplacement( context,
-        MaterialPageRoute(builder: (BuildContext ctx) => HomeScreen()));
+        MaterialPageRoute(builder: (BuildContext ctx) => LoginScreen()));
   }
   static List<String> getMarques() {
     List<String> marques = List<String>();

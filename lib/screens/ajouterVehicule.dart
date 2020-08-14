@@ -190,8 +190,8 @@ class _AjouterVehiculeState extends State<AjouterVehicule> {
       await session.set("categorie", type);
 
       print('Inserted row id=${result.insertId}');
-
-      await session.set("carId",result.insertId);
+      var vid=result.insertId;
+      await session.set("carId",vid);
       await session.set("numTaxi", numtaxi);
       await session.set("numAgrement", numAgrement);
       await session.set("numImmatriculation", numImmatriculation);
